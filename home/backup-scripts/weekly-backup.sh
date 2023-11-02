@@ -1,6 +1,5 @@
 #!/bin/bash
 #
-LOGFILE="$DOTFILES_DIR/backup_log.txt"
 echo "Weekly Backup - $(date)" >> $LOGFILE
 echo "$(date '+%Y-%m-%d %H:%M:%S')" > ~/dotfiles/.last_weekly_backup
 
@@ -9,6 +8,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # Dotfiles directory
 DOTFILES_DIR="$HOME/dotfiles"
+LOGFILE="$DOTFILES_DIR/backup_log.txt"
 
 # File to save the package list
 PACKAGE_LIST="$DOTFILES_DIR/package_list.txt"
