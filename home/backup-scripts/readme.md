@@ -1,12 +1,33 @@
-# Ubuntu WSL2 backup setup
+# Backup Scripts
 
-Instructions for how to set up backups for an ubuntu 22.04 instance running in WSL2 via cron and rsync etc.
+This directory contains scripts to backup various system and user-specific data.
 
-## Copy files
+## Setting up scheduled backups
 
-Copy the backup.sh script
+To schedule the backup scripts to run at specific intervals, we'll be using `cron`.
 
+1. Open the crontab editor:
 ```bash
-cp <path to backup.sh> ~/scripts/backup.sh
+crontab -e
 ```
+
+2. To schedule the `daily-backup.sh` script to run every day at 2 am, add the following line:
+```
+0 2 * * * /path/to/daily-backup.sh
+```
+
+3. To schedule the `weekly-backup.sh` script to run every Sunday at 3 am, add the following line:
+``` 
+0 3 * * 7 /path/to/weekly-backup.sh
+```
+
+4. Save and exit the editor.
+
+5. Ensure both scripts have execute permissions:
+```
+chmod +x /path/to/daily-backup.sh
+chmod +x /path/to/weekly-backup.sh
+
+```
+
 
