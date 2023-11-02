@@ -1,2 +1,8 @@
 .idea
 overwritten-files/
+
+# These are large, and downloaded automatically
+home/.config/tmux/plugins
+
+# The whole of nvim is small enough that I think I'd rather just keep it all
+# home/.config/nvim/plugins
