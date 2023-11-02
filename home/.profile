@@ -36,6 +36,7 @@ if [[ -f ~/dotfiles/.last_daily_backup ]]; then
   ONE_DAY=$((24 * 60 * 60))  # 24 hours in seconds
 
   if [[ $(($CURRENT_TIME - $LAST_MODIFIED)) -gt $ONE_DAY ]]; then
+      echo "INFO: Detected last daily backup older than one day, running ~/backup-scripts/daily-backup.sh now"
       # Run your daily backup script
       ~/backup-scripts/daily-backup.sh
   fi
@@ -48,6 +49,7 @@ if [[ -f ~/dotfiles/.last_weekly_backup ]]; then
   ONE_WEEK=$((24 * 60 * 60 * 7))  # 7 days in seconds
 
   if [[ $(($CURRENT_TIME - $LAST_MODIFIED)) -gt $ONE_WEEK ]]; then
+      echo "INFO: Detected last weekly backup older than one week, running ~/backup-scripts/weekly-backup.sh now"
       # Run your daily backup script
       ~/backup-scripts/weekly-backup.sh
   fi
