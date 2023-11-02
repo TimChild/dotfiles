@@ -2,6 +2,17 @@
 
 This directory contains scripts to backup various system and user-specific data.
 
+Note: By default, these scripts will run at login if they have not been run within the last day/week respectively (set in `.profile`)
+
+## Restoring from backup
+
+To restore from the `package_list.txt` run:
+```
+sudo dpkg --set-selections < packages_list.txt
+sudo apt-get dselect-upgrade
+```
+
+
 ## Setting up scheduled backups
 
 To schedule the backup scripts to run at specific intervals, we'll be using `cron`.
