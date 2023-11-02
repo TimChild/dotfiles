@@ -10,7 +10,7 @@ declare -a explicit_paths=(".config/nvim" ".config/tmux" ".ssh/config" "backup-s
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # Dotfiles directory (i.e. the files to make links to)
-DOTFILES_DIR="$DIR/../home"
+DOTFILES_DIR=$(readlink -f "$DIR/../home")
 
 # Backup directory in case a file already exists and needs to be backed up before creating symlink
 BACKUP_DIR="$DIR/../overwritten-files"
@@ -38,11 +38,6 @@ for path in "${explicit_paths[@]}"; do
 
         # Extract directory structure of the file/directory from path
         path_dir=$(dirname "$path")
-
-        # Debugging output
-        echo "DEBUG: path_dir = $path_dir"
-        echo "DEBUG: BACKUP_DIR/path_dir = $BACKUP_DIR/$path_dir"
-        echo "DEBUG: BACKUP_DIR/path = $BACKUP_DIR/$path"
 
         # Create the directory structure in the backup directory
         mkdir -p "$BACKUP_DIR/$path_dir"
