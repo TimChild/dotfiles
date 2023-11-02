@@ -55,6 +55,7 @@ if [[ -f ~/dotfiles/.last_weekly_backup ]]; then
   fi
 else
   if [[ -f ~/dotfiles/.last_daily_backup ]]; then
+    echo "WARNING: No previous weekly backup, but daily backup found. Running ~/backup-scripts/weekly-backup.sh now"
     ~/backup-scripts/weekly-backup.sh
   else
     echo "WARNING: No weekly or daily backup found. Make sure you set up scheduled backups with crontab. See instructions in ~/backup-scripts/readme.md"
