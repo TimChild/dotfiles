@@ -25,3 +25,23 @@ fi
 if [ -d "$HOME/.local/bin" ] ; then
     PATH="$HOME/.local/bin:$PATH"
 fi
+
+
+# Ensure backup scripts have run recently
+CURRENT_TIME=$(date +%s)
+# Daily backup
+LAST_MODIFIED=$(date -d "$(cat ~/dotfiles/.last_daily_backup)" +%s)
+ONE_DAY=$((24 * 60 * 60))  # 24 hours in seconds
+
+if [[ $(($CURRENT_TIME - $LAST_MODIFIED)) -gt $ONE_DAY ]]; then
+    # Run your daily backup script
+    ~/backup-scripts/daily-backup.sh
+fi
+# Weekly backup
+LAST_MODIFIED=$(date -d "$(cat ~/dotfiles/.last_weekly_backup)" +%s)
+ONE_WEEK=$((24 * 60 * 60 * 7))  # 7 days in seconds
+
+if [[ $(($CURRENT_TIME - $LAST_MODIFIED)) -gt $ONE_WEEK ]]; then
+    # Run your daily backup script
+    ~/backup-scripts/weekly-backup.sh
+fi
