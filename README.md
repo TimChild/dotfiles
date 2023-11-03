@@ -21,3 +21,14 @@ Run the script to setup the symlinks
 ~/dotfiles/scripts/setup-symlinks.sh
 ```
 
+## Backup scripts
+
+Backup scripts are automatically linked in `~/backup_scripts`, but they are not automatically added to `crontab`. Follow the instructions in `~/backup-scripts/README.md`. 
+
+Note: The `.profile` does look for backups, and will give warnings if automatic backups are not set up or have not yet run. 
+
+## Clean install
+
+For a full installation, see the `wsl2_install_instructions.md`.
+
+
