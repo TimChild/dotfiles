@@ -20,6 +20,11 @@ sudo apt dist-upgrade
 ```
 to get all the basics as up to date as possible
 
+To install `make`
+```
+sudo apt install make
+```
+
 ### SSH key
 
 Generate a new ssh key, using I think:
