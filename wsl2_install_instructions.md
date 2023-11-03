@@ -39,6 +39,30 @@ Install `poetry` (A python package manager)
 pipx install poetry
 ```
 
+Install `pyenv`, necessary for providing different python versions for `poetry` to use
+https://www.dedicatedcore.com/blog/install-pyenv-ubuntu/  (except `python-openssl` should be `python3-openssl` instead)
+
+```
+sudo apt install -y make build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev xz-utils tk-dev libffi-dev liblzma-dev python3-openssl git
+
+curl https://pyenv.run | bash
+```
+The necessary additions to `.bashrc` should already be present
+
+(May need to restart the shell here `exec "$shell"`)
+
+Then to install a newer version of python and make it the default global:
+```
+pyenv install --list
+```
+to see what's available, and:
+```
+pyenv install 3.11.6
+pyenv global 3.11.6
+```
+to install and make global. 
+
+Poetry will automatically search through `pyenv` python installs to use appropriate ones. 
 
 
 ### SSH key
