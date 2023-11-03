@@ -25,6 +25,18 @@ To install `make`
 sudo apt install make
 ```
 
+Install `pipx` (I think this is effectively `pip` but installs in an isolated environment while maintaining access globally via cli)
+```
+sudo apt install pipx
+```
+
+Install `poetry` (A python package manager)
+```
+pipx install poetry
+```
+
+
+
 ### SSH key
 
 Generate a new ssh key, using I think:
