@@ -61,3 +61,9 @@ else
     echo "WARNING: No weekly or daily backup found. Make sure you set up scheduled backups with crontab. See instructions in ~/backup-scripts/readme.md"
   fi
 fi
+
+# Created by `pipx` on 2023-11-03 18:27:27
+export PATH="$PATH:/home/tim/.local/bin"
+
+# 2023-11-03 -- Enable autocompletion for pipx
+eval "$(register-python-argcomplete3 pipx)"

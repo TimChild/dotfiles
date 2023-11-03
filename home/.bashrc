@@ -121,3 +121,7 @@ if ! shopt -oq posix; then
 fi
 
 
+
+# Created by `pipx` on 2023-11-03 18:27:27
+export PATH="$PATH:/home/tim/.local/bin"
+

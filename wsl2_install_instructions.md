@@ -28,7 +28,11 @@ sudo apt install make
 Install `pipx` (I think this is effectively `pip` but installs in an isolated environment while maintaining access globally via cli)
 ```
 sudo apt install pipx
+pipx ensurepath
 ```
+
+Then, potentially want to set up completions following `pipx completions` instructions, although that is probably done already because it's set in `.bashrc` or `.profile` that are part of this `dotfiles` repo.
+
 
 Install `poetry` (A python package manager)
 ```
