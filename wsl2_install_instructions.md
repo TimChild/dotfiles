@@ -64,10 +64,16 @@ And, to install the plugins if it doesn't automatically (in tmux)
 
 
 ## Getting Neovim working
-Download a 0.9.x version from 
+
+There are about 12 ways to install `Neovim`, and they all install different versions or require differnt things. It's confusing. I think I have done it by `AppImage` before, and possibly by the `ppk` thing, but now I think the easiest is just to download the `.tar` file, extract, and link. 
+
+Note: The `sudo apt get neovim` or similar, installs a VERY out of date Neovim.
+
+Current setup works with the 0.9.x version from
 
 https://github.com/neovim/neovim/releases
-e.g.
+
+It can be downloaded with
 ```
 wget https://github.com/neovim/neovim/releases/download/v0.9.4/nvim-linux64.tar.gz
 ```
@@ -81,19 +87,28 @@ And make a link to nvim in usr/bin/
 ```
 sudo ln -s "$(pwd)/nvim-linux64/bin/nvim" /usr/local/bin/nvim
 ```
-
-Also install a C compiler for some reason
+ 
+Also install a C compiler for some reason (opening files will give a warning otherwise)
 ```
 sudo apt install gcc
 ```
 
+I don't know that `gcc` is the best choice, there are others, but this works. 
+
 
 ## Installing docker
+
+Possible that docker is not available in the default package repositories, so a few extra steps need to be done so that it can be found. 
 
 ```
 sudo apt install apt-transport-https ca-certificates curl software-properties-common
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+```
+And now docker should be able to be installed like normal
+
+```
+sudo apt update
 sudo apt install docker-ce
 ```
 
