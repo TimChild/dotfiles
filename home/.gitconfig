@@ -3,3 +3,5 @@
 	name = Tim Child
 [init]
 	defaultBranch = main
+[core]
+	editor = nvim
