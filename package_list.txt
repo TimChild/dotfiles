@@ -72,6 +72,7 @@ gcc-11						install
 gcc-11-base:amd64				install
 gcc-12-base:amd64				install
 gettext-base					install
+gh						install
 gir1.2-glib-2.0:amd64				install
 gir1.2-packagekitglib-1.0			install
 git						install
