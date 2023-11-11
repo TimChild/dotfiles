@@ -65,6 +65,7 @@ to install and make global.
 Poetry will automatically search through `pyenv` python installs to use appropriate ones. 
 
 
+
 ### SSH key
 
 Generate a new ssh key, using I think:
@@ -178,5 +179,30 @@ sudo usermod -aG docker $USER
 Follow instructions in `~/backup-scripts/README.md`
 
 Note: this is one of the folders that a link is created for from the dotfiles repo. 
+
+
+## Installing the GitHub `cli` interface (`gh`)
+
+Need to add their `dpkg` thing then install
+```
+type -p curl >/dev/null || (sudo apt update && sudo apt install curl -y)
+curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
+&& sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
+&& echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+&& sudo apt update \
+&& sudo apt install gh -y
+```
+Then, follow instructions with 
+`gh auth login`
+
+And install the `copilot` extension with
+```
+gh extension install github/gh-copilot
+```
+
+Note: can be ugraded with 
+```
+gh extension upgrade gh-copilot
+```
 
 
