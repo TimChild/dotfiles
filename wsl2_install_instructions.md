@@ -73,6 +73,13 @@ sudo snap install doctl
 
 But some other commands might need to be run to set up permissions for specific things.
 
+For example, running this is required for `doctl compute ssh ...` commands.
+```
+sudo snap connect doctl:ssh-keys :ssh-keys
+```
+
+Might be necessary to set up `SSH` key in DigitalOcean [DO account security](https://cloud.digitalocean.com/account/security). See notes below for generating `SSH` keys
+
 
 ### SSH key
 
