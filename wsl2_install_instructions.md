@@ -65,6 +65,14 @@ to install and make global.
 Poetry will automatically search through `pyenv` python installs to use appropriate ones. 
 
 
+Install `doctl` for command line interaction with DigitalOcean. Full instructions  [here](https://docs.digitalocean.com/reference/doctl/how-to/install/). Mainly:
+
+```
+sudo snap install doctl
+```
+
+But some other commands might need to be run to set up permissions for specific things.
+
 
 ### SSH key
 
@@ -149,6 +157,17 @@ Note: 2023-11-06 -- Might be better to use Docker Desktop (installed in Windows 
 Another update... Initially ran into the same errors with docker for windows desktop, so now I think it probably was not an issue to use docker in WSL2 directly, but I don't want to break what is currently working... 
 
 In PyCharm, when setting up the docker compose interpreter, it was **CRUCIAL** to actually specify the "Project name:" field even though it looks like it will use a default name. After that, everything worked as it should.
+
+Note: 2023-11-19 -- Possible that the default install location when installing docker in Windows causes issues when using `snap` installed things in WSL2 (warnings like `...cannot parse mountinfo...` and `...cannot determine SELinux status...`). Solution [here](https://github.com/canonical/microk8s/issues/3911) suggests forcing docker for desktop to install at `C:\Docker`.
+
+From directory with downloaded [Docker Desktop for Windows](https://www.docker.com/products/docker-desktop/) run.
+```
+"Docker Desktop Installer.exe" install --accept-license --installation-dir=C:\Docker
+
+```
+Seems like the root of the issue was that `docker` is by default installed in `C:\Program Files\...` and the space in `Program Files` is not handled properly and splits the rest of the path off... So installing in `C:\Docker\` fixes the issue.
+
+Remember to set docker to run at startup again after re-installing.
 
 
 ---
