@@ -307,6 +307,7 @@ libpng16-16:amd64				install
 libpolkit-agent-1-0:amd64			install
 libpolkit-gobject-1-0:amd64			install
 libpopt0:amd64					install
+libpq5:amd64					install
 libprocps8:amd64				install
 libpsl5:amd64					install
 libpthread-stubs0-dev:amd64			install
@@ -475,6 +476,9 @@ plymouth					install
 plymouth-theme-ubuntu-text			install
 policykit-1					install
 polkitd						install
+postgresql-client				install
+postgresql-client-14				install
+postgresql-client-common			install
 powermgmt-base					install
 procps						install
 psmisc						install
