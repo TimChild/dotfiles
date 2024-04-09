@@ -151,3 +151,5 @@ unset __conda_setup
 # bun
 export BUN_INSTALL="$HOME/.local/share/reflex/bun"
 export PATH=$BUN_INSTALL/bin:$PATH
+
+alias set_env="trap 'set +o allexport' EXIT; set -o allexport; source .env"
