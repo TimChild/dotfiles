@@ -5,4 +5,4 @@
 	defaultBranch = main
 [core]
 	editor = nvim
-	fileMode = false
+	fileMode = true
