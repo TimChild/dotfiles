@@ -561,6 +561,7 @@ software-properties-common			install
 sphinx-rtd-theme-common				install
 squashfs-tools					install
 strace						install
+stripe						install
 sudo						install
 systemd						install
 systemd-hwe-hwdb				install
