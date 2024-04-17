@@ -152,4 +152,9 @@ unset __conda_setup
 export BUN_INSTALL="$HOME/.local/share/reflex/bun"
 export PATH=$BUN_INSTALL/bin:$PATH
 
-alias set_env="trap 'set +o allexport' EXIT; set -o allexport; source .env"
+# alias set_env="trap 'set +o allexport' EXIT; set -o allexport; source .env"
+alias set_env="set -o allexport; source .env; set +o allexport"
+
+
+# Load env for AthenaInstruments on start
+cd ~/github/AthenaInstruments && set_env; cd ~
