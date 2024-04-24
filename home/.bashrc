@@ -157,4 +157,5 @@ alias set_env="set -o allexport; source .env; set +o allexport"
 
 
 # Load env for AthenaInstruments on start
-cd ~/github/AthenaInstruments && set_env; cd ~
+cd ~/github/AthenaInstruments && set_env;
+
