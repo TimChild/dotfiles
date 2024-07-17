@@ -29,6 +29,7 @@ bzip2						install
 bzip2-doc					install
 ca-certificates					install
 ca-certificates-java				install
+code						deinstall
 command-not-found				install
 console-setup					install
 console-setup-linux				install
@@ -662,6 +663,7 @@ libvorbis0a:amd64				install
 libvorbisenc2:amd64				install
 libvorbisfile3:amd64				install
 libvpx7:amd64					install
+libvulkan1:amd64				install
 libwayland-client0:amd64			install
 libwayland-cursor0:amd64			install
 libwayland-egl1:amd64				install
@@ -771,6 +773,7 @@ mawk						install
 media-types					install
 mesa-va-drivers:amd64				install
 mesa-vdpau-drivers:amd64			install
+mesa-vulkan-drivers:amd64			install
 mkdocs						install
 motd-news-config				install
 mount						install
