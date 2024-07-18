@@ -397,6 +397,8 @@ libjs-lunr					install
 libjs-modernizr					install
 libjs-popper.js					install
 libjs-sizzle					install
+libjs-sphinxdoc					install
+libjs-underscore				install
 libjson-c5:amd64				install
 libjsp-api-java					install
 libk5crypto3:amd64				install
@@ -830,6 +832,7 @@ publicsuffix					install
 python-apt-common				install
 python-babel-localedata				install
 python3						install
+python3-alembic					install
 python3-apport					install
 python3-apt					install
 python3-argcomplete				install
@@ -847,6 +850,7 @@ python3-distupgrade				install
 python3-distutils				install
 python3-gdbm:amd64				install
 python3-gi					install
+python3-greenlet				install
 python3-httplib2				install
 python3-importlib-metadata			install
 python3-jeepney					install
@@ -858,6 +862,7 @@ python3-lazr.restfulclient			install
 python3-lazr.uri				install
 python3-lib2to3					install
 python3-livereload				install
+python3-mako					install
 python3-markdown				install
 python3-markupsafe				install
 python3-minimal					install
@@ -878,6 +883,8 @@ python3-secretstorage				install
 python3-setuptools-whl				install
 python3-six					install
 python3-software-properties			install
+python3-sqlalchemy				install
+python3-sqlalchemy-ext:amd64			install
 python3-systemd					install
 python3-tornado					install
 python3-tz					install
@@ -936,6 +943,8 @@ ubuntu-advantage-tools				install
 ubuntu-keyring					install
 ubuntu-minimal					install
 ubuntu-mono					install
+ubuntu-pro-client				install
+ubuntu-pro-client-l10n				install
 ubuntu-release-upgrader-core			install
 ubuntu-standard					install
 ubuntu-wsl					install
