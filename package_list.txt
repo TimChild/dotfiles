@@ -64,6 +64,7 @@ e2fsprogs					install
 ed						install
 eject						install
 emacsen-common					install
+entr						install
 fakeroot					install
 ffmpeg						install
 file						install
