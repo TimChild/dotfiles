@@ -81,10 +81,13 @@ fonts-dejavu					install
 fonts-dejavu-core				install
 fonts-dejavu-extra				install
 fonts-font-awesome				install
+fonts-freefont-ttf				install
+fonts-ipafont-gothic				install
 fonts-lato					install
 fonts-liberation				install
 fonts-liberation2				install
 fonts-linuxlibertine				install
+fonts-noto-color-emoji				install
 fonts-noto-core					install
 fonts-noto-extra				install
 fonts-noto-mono					install
@@ -92,7 +95,10 @@ fonts-noto-ui-core				install
 fonts-opensymbol				install
 fonts-sil-gentium				install
 fonts-sil-gentium-basic				install
+fonts-tlwg-loma-otf				install
 fonts-ubuntu					install
+fonts-unifont					install
+fonts-wqy-zenhei				install
 friendly-recovery				install
 ftp						install
 fuse3						install
@@ -709,6 +715,7 @@ libxdmcp6:amd64					install
 libxext-dev:amd64				install
 libxext6:amd64					install
 libxfixes3:amd64				install
+libxfont2:amd64					install
 libxft-dev:amd64				install
 libxft2:amd64					install
 libxi6:amd64					install
@@ -976,6 +983,7 @@ whiptail					install
 wsl-setup					install
 x11-common					install
 x11-utils					install
+x11-xkb-utils					install
 x11-xserver-utils				install
 x11proto-core-dev				install
 x11proto-dev					install
@@ -983,10 +991,16 @@ xauth						install
 xbitmaps					install
 xdg-user-dirs					install
 xdg-utils					install
+xfonts-cyrillic					install
+xfonts-encodings				install
+xfonts-scalable					install
+xfonts-utils					install
 xkb-data					install
 xorg-sgml-doctools				install
+xserver-common					install
 xterm						install
 xtrans-dev					install
+xvfb						install
 xxd						install
 xz-utils					install
 zlib1g:amd64					install
