@@ -907,6 +907,7 @@ python3.10					install
 python3.10-minimal				install
 python3.10-venv					install
 readline-common					install
+ripgrep						install
 rpcsvc-proto					install
 rsync						install
 rsyslog						install
