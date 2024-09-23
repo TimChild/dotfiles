@@ -1006,3 +1006,5 @@ xxd						install
 xz-utils					install
 zlib1g:amd64					install
 zlib1g-dev:amd64				install
+zsh						install
+zsh-common					install
