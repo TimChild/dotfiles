@@ -395,6 +395,7 @@ libitm1:amd64					install
 libjack-jackd2-0:amd64				install
 libjansson4:amd64				install
 libjbig0:amd64					install
+libjemalloc2:amd64				install
 libjpeg-turbo8:amd64				install
 libjpeg8:amd64					install
 libjs-bootstrap4				install
@@ -429,9 +430,11 @@ liblmdb0:amd64					install
 liblocale-gettext-perl				install
 liblsan0:amd64					install
 libltdl7:amd64					install
+liblua5.1-0:amd64				install
 liblwp-mediatypes-perl				install
 liblwp-protocol-https-perl			install
 liblz4-1:amd64					install
+liblzf1:amd64					install
 liblzma-dev:amd64				install
 liblzma5:amd64					install
 liblzo2-2:amd64					install
@@ -775,6 +778,8 @@ lsb-release					install
 lshw						install
 lsof						install
 lto-disabled-list				install
+lua-bitop:amd64					install
+lua-cjson:amd64					install
 make						install
 man-db						install
 manpages					install
@@ -907,6 +912,9 @@ python3.10					install
 python3.10-minimal				install
 python3.10-venv					install
 readline-common					install
+redis						install
+redis-server					install
+redis-tools					install
 ripgrep						install
 rpcsvc-proto					install
 rsync						install
