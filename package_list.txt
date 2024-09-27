@@ -803,6 +803,7 @@ netcat-openbsd					install
 netplan.io					install
 networkd-dispatcher				install
 nftables					install
+ngrok						install
 node-jquery					install
 ntfs-3g						install
 ocl-icd-libopencl1:amd64			install
