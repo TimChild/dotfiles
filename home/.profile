@@ -63,7 +63,7 @@ else
 fi
 
 # Created by `pipx` on 2023-11-03 18:27:27
-export PATH="$PATH:/home/tim/.local/bin"
+export PATH="$PATH:/home/tim/.local/bin:/home/tim/.local/pyenv/bin"
 
 # 2023-11-03 -- Enable autocompletion for pipx
 eval "$(register-python-argcomplete3 pipx)"
