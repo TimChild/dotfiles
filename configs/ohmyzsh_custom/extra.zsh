@@ -5,10 +5,8 @@ export PYENV_ROOT="$HOME/.pyenv"
 
 # List of directories to check
 directories=(
-    "$HOME/bin"
     "$HOME/.local/bin"
     "/snap/bin"
-    "$HOME/.pyenv/bin"
     "$BUN_INSTALL"
     "$PYENV_ROOT/bin"
 )
@@ -17,11 +15,13 @@ directories=(
 for dir in "${directories[@]}"; do
     if [ -d "$dir" ]; then
         export PATH="$dir:$PATH"
+    else
+      echo "WARNING: Did not find \"$dir\" to add to path"
     fi
 done
 
 # Init pyenv
-eval "$(pyenv init -)"
+# eval "$(pyenv init -)"
 
 # Daily backup
 if [[ -f ~/dotfiles/.last_daily_backup ]]; then
