@@ -1,3 +1,4 @@
+echo "Running ...extra.zsh"
 source ~/dotfiles/task-completions.zsh
 
 export BUN_INSTALL="$HOME/.local/share/reflex/bun"
@@ -21,7 +22,7 @@ for dir in "${directories[@]}"; do
 done
 
 # Init pyenv
-# eval "$(pyenv init -)"
+eval "$(pyenv init -)"
 
 # Daily backup
 if [[ -f ~/dotfiles/.last_daily_backup ]]; then
