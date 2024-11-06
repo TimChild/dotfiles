@@ -1,4 +1,3 @@
-echo "Running ...extra.zsh"
 source ~/dotfiles/task-completions.zsh
 
 export BUN_INSTALL="$HOME/.local/share/reflex/bun"
