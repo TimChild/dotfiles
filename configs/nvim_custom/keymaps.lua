@@ -1,6 +1,8 @@
 -- Copy to system clipboard
 vim.keymap.set("n", "<leader>y", '"+y')
 
+vim.keymap.set("n", "]q", ":cnext<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "[q", ":cprev<CR>", { noremap = true, silent = true })
 -- 2024-11-06 -- want to add this back in, but something wrong with setup that is causing errors on commenting
 -- and dont want this confusing things further
 --
