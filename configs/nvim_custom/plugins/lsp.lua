@@ -27,6 +27,7 @@ return {
 
 			-- Allows extra capabilities provided by nvim-cmp
 			"hrsh7th/cmp-nvim-lsp",
+			"L3MON4D3/LuaSnip",
 		},
 		config = function()
 			-- LSP provides Neovim with features like:
