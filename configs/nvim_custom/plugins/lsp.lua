@@ -188,6 +188,7 @@ return {
 				},
 				ruff = {},
 				pyright = {},
+				shellcheck = {},
 			}
 
 			-- Ensure the servers and tools above are installed
