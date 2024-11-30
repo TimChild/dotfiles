@@ -16,14 +16,29 @@ tasks:
     requires: 
       vars: [DROPLET_NAME]
     cmds:
-      # Set up the droplet by running script there
-      - doctl compute ssh {{.DROPLET_NAME}} --ssh-command "bash -s" < scripts/init_droplet.sh
+      # Set up the droplet by running script there (if this failes, likely that droplet is already set up and blocking root login)
+      - doctl compute ssh {{.DROPLET_NAME}} --ssh-user root --ssh-command "bash -s" < scripts/init_droplet.sh
       # Set up local configuration to make access to droplet easier
       # Add the droplet to the ssh config
       - echo "Host {{.DROPLET_NAME}}" >> ~/.ssh/config
       - echo "  HostName $(doctl compute droplet get {{.DROPLET_NAME}} --format PublicIPv4 --no-header)" >> ~/.ssh/config
       - echo "  User webadmin" >> ~/.ssh/config
       - echo "" >> ~/.ssh/config
+
+  setup_docker:
+    desc: "Set up docker on a droplet"
+    requires:
+      vars: [DROPLET_NAME]
+    cmds:
+      - doctl compute ssh {{.DROPLET_NAME}} --ssh-user webadmin --ssh-command "bash -s" < scripts/setup_docker.sh
+
+  setup_plex:
+    desc: "Set up plex to run on a droplet"
+    requires:
+      vars: [DROPLET_NAME]
+    cmds:
+      - doctl compute ssh {{.DROPLET_NAME}} --ssh-user webadmin --ssh-command "bash -s" < scripts/setup_plex.sh
+
 
 
 
