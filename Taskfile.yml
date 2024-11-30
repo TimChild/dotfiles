@@ -1,0 +1,29 @@
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  GREETING: Hello, World!
+
+tasks:
+  default:
+    cmds:
+      - echo "{{.GREETING}}"
+    silent: true
+
+  setup_new_droplet:
+    desc: "Perform initial setup of a new DO droplet. setting user permissions etc."
+    requires: 
+      vars: [DROPLET_NAME]
+    cmds:
+      # Set up the droplet by running script there
+      - doctl compute ssh {{.DROPLET_NAME}} --ssh-command "bash -s" < scripts/init_droplet.sh
+      # Set up local configuration to make access to droplet easier
+      # Add the droplet to the ssh config
+      - echo "Host {{.DROPLET_NAME}}" >> ~/.ssh/config
+      - echo "  HostName $(doctl compute droplet get {{.DROPLET_NAME}} --format PublicIPv4 --no-header)" >> ~/.ssh/config
+      - echo "  User webadmin" >> ~/.ssh/config
+      - echo "" >> ~/.ssh/config
+
+
+
