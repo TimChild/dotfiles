@@ -19,21 +19,26 @@ size="$2"
 image="$3"
 region="$4"
 ssh_key_name="$5"
+project_name="$6"
 
 echo "Name: $name"
 echo "Size: $size"
 echo "Image: $image"
 echo "Region: $region"
 echo "SSH Key Name: $ssh_key_name"
+echo "Project Name: $project_name"
 
 # Check all arguments are provided
-if [ -z "$name" ] || [ -z "$size" ] || [ -z "$image" ] || [ -z "$region" ] || [ -z "$ssh_key_name" ]; then
-  echo "Usage: create_droplet.sh <name> <size> <image> <region> <ssh_key_name>"
+if [ -z "$name" ] || [ -z "$size" ] || [ -z "$image" ] || [ -z "$region" ] || [ -z "$ssh_key_name" ] || [ -z "$project_name" ]; then
+  echo "Usage: create_droplet.sh <name> <size> <image> <region> <ssh_key_name> <project_name>"
   exit 1
 fi
 
 # Determine SSH key id by name
 ssh_key_id=$(doctl compute ssh-key list | grep -w "Tim-PC-ubuntu" | awk '{print $1}')
+
+# Determine project id by name
+project_id=$(doctl projects list | grep -w "$project_name" | awk '{print $1}')
 
 
 doctl compute droplet create "$name"\
@@ -41,6 +46,7 @@ doctl compute droplet create "$name"\
     --image "$image"\
     --region "$region"\
     --ssh-keys "$ssh_key_id"\
+    --project-id "$project_id"\
     --wait
 
 heading "Droplet created successfully"

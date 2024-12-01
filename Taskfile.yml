@@ -20,6 +20,7 @@ tasks:
       IMAGE: '{{.IMAGE | default "ubuntu-24-04-x64"}}'
       REGION: '{{.REGION | default "sfo3"}}'
       SSH_KEY_NAME: '{{.SSH_KEY_NAME | default "Tim-PC-ubuntu"}}'
+      PROJECT: '{{.PROJECT | default "Personal"}}'
     preconditions:
       - sh: doctl compute size list | grep -q {{.SIZE}}
         msg: "Size '{{.SIZE}}' does not exist -- check doctl compute size list"
@@ -29,10 +30,12 @@ tasks:
         msg: "Region '{{.REGION}}' does not exist -- check doctl compute region list"
       - sh: doctl compute ssh-key list | grep -q {{.SSH_KEY_NAME}}
         msg: "SSH key '{{.SSH_KEY_NAME}}' does not exist -- check doctl compute ssh-key list"
+      - sh: doctl projects list | grep -q {{.PROJECT}}
+        msg: "Project '{{.PROJECT}}' does not exist -- check doctl projects list"
       - sh: doctl compute droplet list | grep -q {{.NEW_DROPLET_NAME}} && exit 1 || exit 0
         msg: "Droplet '{{.NEW_DROPLET_NAME}}' already exists -- choose a different name"
     cmds:
-      - bash scripts/create_droplet.sh {{.NEW_DROPLET_NAME}} {{.SIZE}} {{.IMAGE}} {{.REGION}} {{.SSH_KEY_NAME}}
+      - bash scripts/create_droplet.sh {{.NEW_DROPLET_NAME}} {{.SIZE}} {{.IMAGE}} {{.REGION}} {{.SSH_KEY_NAME}} {{.PROJECT}}
       - echo "Droplet '{{.NEW_DROPLET_NAME}}' created successfully -- waiting a few seconds for initial boot"
       - sleep 10
       - task: droplet_setup_new
