@@ -1,0 +1,46 @@
+#!/bin/bash
+# This script creates a new droplet on DigitalOcean
+
+
+# Exit on error
+set -e 
+
+function heading() {
+    echo "-------"
+    printf "\033[1;32m %s \033[0m \n" "$1"
+    echo "-------"
+}
+
+heading "Creating droplet"
+
+# Extract arguments
+name="$1"
+size="$2"
+image="$3"
+region="$4"
+ssh_key_name="$5"
+
+echo "Name: $name"
+echo "Size: $size"
+echo "Image: $image"
+echo "Region: $region"
+echo "SSH Key Name: $ssh_key_name"
+
+# Check all arguments are provided
+if [ -z "$name" ] || [ -z "$size" ] || [ -z "$image" ] || [ -z "$region" ] || [ -z "$ssh_key_name" ]; then
+  echo "Usage: create_droplet.sh <name> <size> <image> <region> <ssh_key_name>"
+  exit 1
+fi
+
+# Determine SSH key id by name
+ssh_key_id=$(doctl compute ssh-key list | grep -w "Tim-PC-ubuntu" | awk '{print $1}')
+
+
+doctl compute droplet create "$name"\
+    --size "$size"\
+    --image "$image"\
+    --region "$region"\
+    --ssh-keys "$ssh_key_id"\
+    --wait
+
+heading "Droplet created successfully"
