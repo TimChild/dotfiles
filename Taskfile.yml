@@ -90,6 +90,44 @@ tasks:
     cmds:
       - doctl compute ssh {{.DROPLET_NAME}} --ssh-user webadmin --ssh-command "bash -s" < scripts/setup_plex.sh
 
+  droplet_extend_ssl_cert:
+    desc: |
+      Extend the SSL certificates with e.g. a new subdomain 
+      E.g. task droplet_extend_ssl_cert DOMAIN_NAMES="adventuresoftim.com,www.adventuresoftim.com,ceracool.adventuresoftim.com"
+      Note: ALL domains must be listed (the existing ones) as well as any new ones.
+    requires:
+      vars: [DROPLET_NAME, DOMAIN_NAMES]
+    vars:
+      # Note: This is for the `webserver` dir that I use in my basic reflex website setup
+      WEBSERVER_DIR: '{{.WEBSERVER_DIR | default "/home/webadmin/aot/webserver"}}'
+    cmds:
+      - echo "Extending SSL certificates for {{.DOMAIN_NAMES}} with webserver dir {{.WEBSERVER_DIR}}"
+      # - echo "$(< scripts/extend_ssl_cert.sh)"
+      # - doctl compute ssh {{.DROPLET_NAME}} --ssh-user webadmin --ssh-command "bash -s" < scripts/extend_ssl_cert.sh {{.WEBSERVER_DIR}} {{.DOMAIN_NAMES}}
+      - doctl compute ssh {{.DROPLET_NAME}} --ssh-user webadmin --ssh-command "echo '$(< scripts/extend_ssl_cert.sh)' | bash -s -- {{.WEBSERVER_DIR}} {{.DOMAIN_NAMES}}"
+
+  droplet_generate_ssk_key:
+    desc: | 
+      Generate a new SSH key pair, add the public key to known hosts on the droplet, and copy the private key to clipboard.
+      Useful for setting up ssh keys on github actions etc.
+
+    requires:
+      vars: [DROPLET_NAME]
+    cmds:
+      # Generate a new SSH key pair without a passphrase
+      - ssh-keygen -t rsa -b 4096 -f /tmp/temp_ssh_key -N ""
+      - defer: rm /tmp/temp_ssh_key /tmp/temp_ssh_key.pub
+
+      - doctl compute ssh {{.DROPLET_NAME}} --ssh-user webadmin --ssh-command "echo $(cat /tmp/temp_ssh_key.pub) >> ~/.ssh/authorized_keys"
+      # Copy the private key to the clipboard
+      # (Linux would use xclip)
+      # - cat /tmp/temp_ssh_key | xclip -selection clipboard
+      # (WSL2 use the windows clip.exe)
+      - cat /tmp/temp_ssh_key | clip.exe
+
+      # Print the private key to the console
+      - cat /tmp/temp_ssh_key
+
 
 
 
