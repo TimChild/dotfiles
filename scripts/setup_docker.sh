@@ -9,10 +9,12 @@ function heading() {
     echo "-------"
 }
 
+export DEBIAN_FRONTEND=noninteractive
+
 heading "Installing Docker"
 echo "Updating package list"
 sudo apt-get update -y
-sudo apt-get install apt-transport-https ca-certificates curl software-properties-common
+sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common
 
 # Add Docker’s official GPG key:
 echo "Adding Docker’s official GPG key"
@@ -22,11 +24,13 @@ echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docke
 # Install Docker
 echo "Installing Docker"
 sudo apt-get update -y
-sudo apt-get install docker-ce -y
+sudo apt-get install -y docker-ce
 
 heading "Checking docker status"
 sudo systemctl status docker
-docker version
+
+heading "Checking Docker version"
+sudo docker version
 
 # Add user to docker group
 heading "Adding user to docker group (to run docker without sudo)"
