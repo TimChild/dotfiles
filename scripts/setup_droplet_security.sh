@@ -42,9 +42,6 @@ sed -i 's/PasswordAuthentication yes/PasswordAuthentication no/' /etc/ssh/sshd_c
 echo "   Restarting SSH"
 systemctl restart ssh
 
-heading "Setting max journal size to 300MB"
-sed -i 's/#SystemMaxUse=/SystemMaxUse=300M/' /etc/systemd/journald.conf
-
 
 heading "Droplet setup complete"
 
