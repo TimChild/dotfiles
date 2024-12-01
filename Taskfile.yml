@@ -11,6 +11,40 @@ tasks:
       - echo "{{.GREETING}}"
     silent: true
 
+  create_new_droplet:
+    desc: "Create a new DO droplet and initialize it"
+    requires:
+      vars: [NEW_DROPLET_NAME]
+    vars:
+      SIZE: '{{.SIZE | default "s-1vcpu-512mb-10gb"}}'
+      IMAGE: '{{.IMAGE | default "ubuntu-24-04-x64"}}'
+      REGION: '{{.REGION | default "sfo3"}}'
+      SSH_KEY_NAME: '{{.SSH_KEY_NAME | default "Tim-PC-ubuntu"}}'
+    preconditions:
+      - sh: doctl compute size list | grep -q {{.SIZE}}
+        msg: "Size '{{.SIZE}}' does not exist -- check doctl compute size list"
+      - sh: doctl compute image list-distribution | grep -q {{.IMAGE}}
+        msg: "Image '{{.IMAGE}}' does not exist -- check doctl compute image list-distribution"
+      - sh: doctl compute region list | grep -q {{.REGION}}
+        msg: "Region '{{.REGION}}' does not exist -- check doctl compute region list"
+      - sh: doctl compute ssh-key list | grep -q {{.SSH_KEY_NAME}}
+        msg: "SSH key '{{.SSH_KEY_NAME}}' does not exist -- check doctl compute ssh-key list"
+      - sh: doctl compute droplet list | grep -q {{.NEW_DROPLET_NAME}} && exit 1 || exit 0
+        msg: "Droplet '{{.NEW_DROPLET_NAME}}' already exists -- choose a different name"
+    cmds:
+      - bash scripts/create_droplet.sh {{.NEW_DROPLET_NAME}} {{.SIZE}} {{.IMAGE}} {{.REGION}} {{.SSH_KEY_NAME}}
+      - task: setup_new_droplet
+        vars: 
+          DROPLET_NAME: '{{.NEW_DROPLET_NAME}}'
+
+  temp:
+    vars:
+      NEW_DROPLET_NAME: "test"
+    cmds:
+      - task: setup_new_droplet
+        vars: 
+          DROPLET_NAME: '{{.NEW_DROPLET_NAME}}'
+
   setup_new_droplet:
     desc: "Perform initial setup of a new DO droplet. setting user permissions etc."
     requires: 
@@ -36,6 +70,9 @@ tasks:
     desc: "Set up plex to run on a droplet"
     requires:
       vars: [DROPLET_NAME]
+    vars:
+      PLEX_DATA_SERVER: child@154.20.156.142
+      PLEX_DATA_SERVER_PATH: "//TIM-PC/1Video"
     cmds:
       - doctl compute ssh {{.DROPLET_NAME}} --ssh-user webadmin --ssh-command "bash -s" < scripts/setup_plex.sh
 
