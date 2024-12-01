@@ -34,7 +34,7 @@ tasks:
     cmds:
       - bash scripts/create_droplet.sh {{.NEW_DROPLET_NAME}} {{.SIZE}} {{.IMAGE}} {{.REGION}} {{.SSH_KEY_NAME}}
       - echo "Droplet '{{.NEW_DROPLET_NAME}}' created successfully -- waiting a few seconds for initial boot"
-      - sleep 5
+      - sleep 10
       - task: droplet_setup_new
         vars: 
           DROPLET_NAME: '{{.NEW_DROPLET_NAME}}'
