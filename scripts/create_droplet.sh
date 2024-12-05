@@ -47,6 +47,7 @@ doctl compute droplet create "$name"\
     --region "$region"\
     --ssh-keys "$ssh_key_id"\
     --project-id "$project_id"\
+    --enable-monitoring\
     --wait
 
 heading "Droplet created successfully"
