@@ -166,38 +166,73 @@ return {
 			--  - capabilities (table): Override fields in capabilities. Can be used to disable certain LSP features.
 			--  - settings (table): Override the default settings passed when initializing the server.
 			--        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
-			local servers = {
-				-- gopls = {},
-				-- pyright = {},
-				-- Some languages (like typescript) have entire language plugins that can be useful:
-				--    https://github.com/pmizio/typescript-tools.nvim
+			local servers =
+				{
+					-- gopls = {},
+					-- pyright = {},
+					-- Some languages (like typescript) have entire language plugins that can be useful:
+					--    https://github.com/pmizio/typescript-tools.nvim
 
-				lua_ls = {
-					-- cmd = {...},
-					-- filetypes = { ...},
-					-- capabilities = {},
-					settings = {
-						Lua = {
-							completion = {
-								callSnippet = "Replace",
+					lua_ls = {
+						-- cmd = {...},
+						-- filetypes = { ...},
+						-- capabilities = {},
+						settings = {
+							Lua = {
+								completion = {
+									callSnippet = "Replace",
+								},
+								-- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
+								-- diagnostics = { disable = { 'missing-fields' } },
 							},
-							-- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
-							-- diagnostics = { disable = { 'missing-fields' } },
+						},
+					},
+					ruff = {},
+					pyright = {},
+					shellcheck = {},
+					yamlls = {
+						capabilities = {
+							textDocument = {
+								foldingRange = {
+									dynamicRegistration = false,
+									lineFoldingOnly = true,
+								},
+							},
+						},
+						-- lazy-load schemastore when needed
+						on_new_config = function(new_config)
+							new_config.settings.yaml.schemas = vim.tbl_deep_extend(
+								"force",
+								new_config.settings.yaml.schemas or {},
+								require("schemastore").yaml.schemas()
+							)
+						end,
+						settings = {
+							redhat = { telemetry = { enabled = false } },
+							yaml = {
+								keyOrdering = false,
+								format = {
+									enable = true,
+								},
+								validate = true,
+								schemaStore = {
+									-- Must disable built-in schemaStore support to use
+									-- schemas from SchemaStore.nvim plugin
+									enable = false,
+									-- Avoid TypeError: Cannot read properties of undefined (reading 'length')
+									url = "",
+								},
+							},
 						},
 					},
 				},
-				ruff = {},
-				pyright = {},
-				shellcheck = {},
-			}
-
-			-- Ensure the servers and tools above are installed
-			--  To check the current status of installed tools and/or manually install
-			--  other tools, you can run
-			--    :Mason
-			--
-			--  You can press `g?` for help in this menu.
-			require("mason").setup()
+				-- Ensure the servers and tools above are installed
+				--  To check the current status of installed tools and/or manually install
+				--  other tools, you can run
+				--    :Mason
+				--
+				--  You can press `g?` for help in this menu.
+				require("mason").setup()
 
 			-- You can add other tools here that you want Mason to install
 			-- for you, so that they are available from within Neovim.
