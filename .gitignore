@@ -5,6 +5,7 @@ overwritten-files/
 ## Files in config that are populated by init scripts/plugin install etc.
 config/tmux/plugins
 config/tmux/*.log
+config/nvim-old
 
 
 # 2024-12 -- Don't think I use anything below here any more.
