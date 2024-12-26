@@ -17,6 +17,7 @@
 # Install zsh (and oh-my-zsh -- asks to set as default)
 sudo apt install zsh
 ln -s ~/dotfiles/home/.zshrc ~/.zshrc
+rm -rf ~/.oh-my-zsh
 sh -c "$(wget -qO- https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" -- --unattended --keep-zshrc
 rm -r ~/.oh-my-zsh/custom
 ln -s ~/dotfiles/config/oh-my-zsh-custom ~/.oh-my-zsh/custom
@@ -32,6 +33,12 @@ sudo apt-get install ripgrep make
 # For taskfile (classic confinement required)
 sudo snap install task --classic
 
+# Install neovim (and setup custom config)
+curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz
+sudo rm -rf /opt/nvim
+sudo tar -C /opt -xzf nvim-linux64.tar.gz
+git clone https://github.com/TimChild/kickstart.nvim.git "${XDG_CONFIG_HOME:-$HOME/.config}"/nvim
+# export PATH="$PATH:/opt/nvim-linux64/bin"  # Might need to add this to .zshrc?
 
 
 
