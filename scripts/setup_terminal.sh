@@ -18,7 +18,7 @@
 sudo apt install zsh
 ln -s ~/dotfiles/home/.zshrc ~/.zshrc
 rm -rf ~/.oh-my-zsh
-sh -c "$(wget -qO- https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" -- --keep-zshrc
+sh -c "$(wget -qO- https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" -- --keep-zshrc --unattended
 # --unattended (could add this to the ohmyzsh script to prevent trying to switch shells straight away)
 rm -r ~/.oh-my-zsh/custom
 ln -s ~/dotfiles/config/oh-my-zsh-custom ~/.oh-my-zsh/custom
