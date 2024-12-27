@@ -18,9 +18,13 @@
 sudo apt install zsh
 ln -s ~/dotfiles/home/.zshrc ~/.zshrc
 rm -rf ~/.oh-my-zsh
-sh -c "$(wget -qO- https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" -- --unattended --keep-zshrc
+sh -c "$(wget -qO- https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" -- --keep-zshrc
+# --unattended (could add this to the ohmyzsh script to prevent trying to switch shells straight away)
 rm -r ~/.oh-my-zsh/custom
 ln -s ~/dotfiles/config/oh-my-zsh-custom ~/.oh-my-zsh/custom
+# # Change the default shell (this might not be necessary following script above)
+# # Note: Only takes effect on restart
+# chsh -s $(which zsh)
 
 
 # For clipboard support in tmux (could also use xclip)
@@ -32,6 +36,11 @@ sudo apt-get install gcc
 sudo apt-get install ripgrep make
 # For taskfile (classic confinement required)
 sudo snap install task --classic
+curl https://pyenv.run | bash
+sudo apt-get install pipx
+pipx ensurepath
+sudo pipx ensurepath --global
+
 
 # Install neovim (and setup custom config)
 curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz
