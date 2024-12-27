@@ -41,13 +41,18 @@ sudo apt-get install pipx
 pipx ensurepath
 sudo pipx ensurepath --global
 
+# Install and setup poetry
+pipx install poetry
+mkdir $ZSH_CUSTOM/plugins/poetry
+poetry completions zsh > $ZSH_CUSTOM/plugins/poetry/_poetry
+
 
 # Install neovim (and setup custom config)
 curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz
 sudo rm -rf /opt/nvim
 sudo tar -C /opt -xzf nvim-linux64.tar.gz
 git clone https://github.com/TimChild/kickstart.nvim.git "${XDG_CONFIG_HOME:-$HOME/.config}"/nvim
-# export PATH="$PATH:/opt/nvim-linux64/bin"  # Might need to add this to .zshrc?
+rm nvim-linux64.tar.gz   
 
 
 
