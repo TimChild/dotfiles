@@ -33,7 +33,7 @@ sudo apt-get install xsel
 # C-compilers (for some nvim things)
 sudo apt-get install gcc
 # Other tools that are useful
-sudo apt-get install ripgrep make
+sudo apt-get install ripgrep make curl
 # For taskfile (classic confinement required)
 sudo snap install task --classic
 curl https://pyenv.run | bash
@@ -46,6 +46,10 @@ pipx install poetry
 mkdir $ZSH_CUSTOM/plugins/poetry
 poetry completions zsh > $ZSH_CUSTOM/plugins/poetry/_poetry
 
+# Install npm (with nvm as a version manager_
+wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+source ~/.zshrc
+nvm install node
 
 # Install neovim (and setup custom config)
 curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz
@@ -55,6 +59,7 @@ git clone https://github.com/TimChild/kickstart.nvim.git "${XDG_CONFIG_HOME:-$HO
 rm nvim-linux64.tar.gz   
 
 
-
+# Install go
+source setup_go.sh
 
 
