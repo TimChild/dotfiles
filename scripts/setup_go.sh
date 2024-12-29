@@ -3,31 +3,14 @@
 # URL for the specific Go version
 GO_SPECIFIC_URL="https://go.dev/dl/go1.23.4.linux-amd64.tar.gz"
 
-# Function to download the latest Go version
-download_latest_go() {
-  # Fetch the latest version URL from the Go downloads page
-  LATEST_GO_URL=$(curl -s https://go.dev/dl/ | grep -oP 'https://go.dev/dl/go[0-9.]+.linux-amd64.tar.gz' | head -n 1)
-
-  # If the latest version is found, download it; otherwise, download the specific version
-  if [[ -n "$LATEST_GO_URL" ]]; then
-    echo "Downloading latest Go version from $LATEST_GO_URL"
-    curl -O "$LATEST_GO_URL"
-  else
-    echo "Downloading specific Go version from $GO_SPECIFIC_URL"
-    curl -O "$GO_SPECIFIC_URL"
-  fi
-}
 
 # Function to install Go
 install_go() {
-  # Extract the tar file name from the URL
-  TAR_FILE=$(basename "$LATEST_GO_URL")
-  if [[ ! -f "$TAR_FILE" ]]; then
-    TAR_FILE=$(basename "$GO_SPECIFIC_URL")
-  fi
+  # Determine the correct tar file name
+  TAR_FILE=$(ls go*.linux-amd64.tar.gz | head -n 1)
 
-  # Install Go
-  echo "Installing Go..."
+  # Verify the tar file is a valid gzip file
+  echo "Installing Go from $TAR_FILE..."
   sudo rm -rf /usr/local/go
   sudo tar -C /usr/local -xzf "$TAR_FILE"
 
@@ -37,7 +20,18 @@ install_go() {
 }
 
 # Main script execution
-download_latest_go
+if [ ! -f go*.linux-amd64.tar.gz ]; then
+  echo "Downloading go"
+  curl -LO "$GO_SPECIFIC_URL"
+else
+  echo "Using existing go tar file"
+fi
 install_go
+
+# Add Go path export to zshrc if not already present
+if ! grep -q "export PATH=\$PATH:/usr/local/go/bin" ~/.zshrc; then
+  echo "Adding Go path export to ~/.zshrc..."
+  echo "export PATH=\$PATH:/usr/local/go/bin" >> ~/.zshrc
+fi
 
 echo "Go installation completed."
