@@ -3,13 +3,11 @@ Final instructions to initialize everything:
 nvim:
 run :Copilot -- then follow instructions to enable
 
-alacritty:
-set default font to "Jetbrains mono" (how?)
-
 tmux:
 possibly need to do <prefix> + I to install plugins
 
+Restart the system for all changes to take effect (e.g. default terminal, font, etc.)
 
-Restart the system for all changes to take effect (e.g. default terminal)
+Remember to use `Alacritty` as the terminal emulator. (should already be set as default -- possibly need to run `sudo update-alternatives --config x-terminal-emulator` and select it)
 
 

@@ -26,7 +26,7 @@ sudo apt-get install -y gcc ripgrep make curl unzip
 # Install jetbrains nerdfont
 wget https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/JetBrainsMono.zip -P ~/Downloads
 mkdir ~/.fonts
-unzip ~/Downloads/JetBrainsMono.zip -d ~/.fonts
+unzip ~/Downloads/JetBrainsMono.zip -d ~/.local/share/fonts
 fc-cache -f -v
 rm ~/Downloads/JetBrainsMono.zip
 
