@@ -3,16 +3,33 @@
 # This script is to set up the terminal with configurations etc. saved in dotfiles.
 
 
-# # Setup home directory configs
-# ln -s ~/dotfiles/home/.gitconfig ~/.gitconfig
-# ln -s ~/dotfiles/home/.ssh/config ~/.ssh/config
-# ln -s ~/dotfiles/home/.zshrc ~/.zshrc
-# 
-#
-# # Setup configs (that live in config directory)
-# ln -s ~/dotfiles/config/tmux ~/.config
-# ln -s ~/dotfiles/config/nvim ~/.config
-# ln -s ~/dotfiles/config/oh-my-zsh ~/.config
+# Setup home directory configs
+ln -s ~/dotfiles/home/.gitconfig ~/.gitconfig
+ln -s ~/dotfiles/home/.ssh/config ~/.ssh/config
+ln -s ~/dotfiles/home/.zshrc ~/.zshrc
+ 
+
+# Setup configs (that live in config directory)
+ln -s ~/dotfiles/config/tmux ~/.config
+ln -s ~/dotfiles/config/nvim ~/.config
+ln -s ~/dotfiles/config/oh-my-zsh ~/.config
+ln -s ~/dotfiles/config/alacritty ~/.config
+
+# Update before any other installs
+sudo apt-get update
+# Install some general tools and utilities (required by tmux, nvim, etc.)
+# For clipboard support in tmux (could also use xclip)
+sudo apt-get install -y xsel
+# Other tools that are useful
+sudo apt-get install -y gcc ripgrep make curl unzip
+
+# Install jetbrains nerdfont
+wget https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/JetBrainsMono.zip -P ~/Downloads
+mkdir ~/.fonts
+unzip ~/Downloads/JetBrainsMono.zip -d ~/.fonts
+fc-cache -f -v
+rm ~/Downloads/JetBrainsMono.zip
+
 
 # Install zsh (and oh-my-zsh -- asks to set as default)
 sudo apt install zsh
@@ -24,24 +41,27 @@ rm -r ~/.oh-my-zsh/custom
 ln -s ~/dotfiles/config/oh-my-zsh-custom ~/.oh-my-zsh/custom
 # # Change the default shell (this might not be necessary following script above)
 # # Note: Only takes effect on restart
-# chsh -s $(which zsh)
+chsh -s $(which zsh)
+echo "Default shell change to zsh will be recognized after restart"
 
 
-# For clipboard support in tmux (could also use xclip)
-sudo apt-get update
-sudo apt-get install xsel
-# C-compilers (for some nvim things)
-sudo apt-get install gcc
-# Other tools that are useful
-sudo apt-get install ripgrep make curl
+# Setup tmux
+sudo snap install tmux --classic
+git clone https://github.com/tmux-plugins/tpm ~/.config/tmux/plugins/tpm
+
+# Setup Taskfile
 # For taskfile (classic confinement required)
 sudo snap install task --classic
+
+# Setup pyenv
 curl https://pyenv.run | bash
+
+# Setup pipx
 sudo apt-get install pipx
 pipx ensurepath
 sudo pipx ensurepath --global
 
-# Install and setup poetry
+# Setup poetry
 pipx install poetry
 mkdir "$ZSH_CUSTOM/plugins/poetry"
 poetry completions zsh > "$ZSH_CUSTOM"/plugins/poetry/_poetry
@@ -56,10 +76,10 @@ nvm install node
 curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz
 sudo rm -rf /opt/nvim
 sudo tar -C /opt -xzf nvim-linux64.tar.gz
-git clone https://github.com/TimChild/kickstart.nvim.git "${XDG_CONFIG_HOME:-$HOME/.config}"/nvim
 rm nvim-linux64.tar.gz   
 
 # Install go
-source setup_go.sh
+source ~/dotfiles/scripts/setup_go.sh
 
-
+# Echo the contents of manual-steps.txt to terminal
+cat ~/dotfiles/scripts/manual-steps.txt
