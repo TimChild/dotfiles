@@ -59,7 +59,6 @@ sudo tar -C /opt -xzf nvim-linux64.tar.gz
 git clone https://github.com/TimChild/kickstart.nvim.git "${XDG_CONFIG_HOME:-$HOME/.config}"/nvim
 rm nvim-linux64.tar.gz   
 
-
 # Install go
 source setup_go.sh
 
