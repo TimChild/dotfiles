@@ -1,3 +1,22 @@
+# Dotfiles (primarily for linux use)
+
+Setup by running the following commands:
+```sh
+sudo apt update && sudo apt install gh -y
+gh auth login
+gh repo clone TimChild/dotfiles
+source ~/dotfiles/scripts/setup_terminal.sh
+```
+
+Additional setup steps will be shown in terminal. 
+
+
+TODO: Better describe the full setup process, and remove old README, and old wsl2_install_instructions
+
+---
+
+# OLD README
+
 # Dotfiles for Ubuntu 22.04
 
 Repository containing useful scripts and configuration files for Ubuntu.
