@@ -43,11 +43,12 @@ sudo pipx ensurepath --global
 
 # Install and setup poetry
 pipx install poetry
-mkdir $ZSH_CUSTOM/plugins/poetry
-poetry completions zsh > $ZSH_CUSTOM/plugins/poetry/_poetry
+mkdir "$ZSH_CUSTOM/plugins/poetry"
+poetry completions zsh > "$ZSH_CUSTOM"/plugins/poetry/_poetry
 
 # Install npm (with nvm as a version manager_
 wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+# shellcheck source=/home/tim/.zshrc
 source ~/.zshrc
 nvm install node
 
