@@ -1,0 +1,16 @@
+[font]
+size=11.0
+
+[font.normal]
+family = "JetBrains Mono"
+
+[font.bold]
+family = "JetBrains Mono"
+
+[font.italic]
+family = "JetBrains Mono"
+
+[font.bold_italic]
+family = "JetBrains Mono"
+
+
