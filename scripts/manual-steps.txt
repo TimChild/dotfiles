@@ -1,0 +1,15 @@
+Final instructions to initialize everything:
+
+nvim:
+run :Copilot -- then follow instructions to enable
+
+alacritty:
+set default font to "Jetbrains mono" (how?)
+
+tmux:
+possibly need to do <prefix> + I to install plugins
+
+
+Restart the system for all changes to take effect (e.g. default terminal)
+
+
