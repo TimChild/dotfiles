@@ -35,6 +35,7 @@ sudo docker version
 # Add user to docker group
 heading "Adding user to docker group (to run docker without sudo)"
 sudo usermod -aG docker "${USER}"
+# newgrp docker  # may not work in scripts 
 # su - "${USER}"  # may not work in scripts
 
 heading "Installing Docker Compose"
