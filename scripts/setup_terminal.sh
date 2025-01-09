@@ -83,6 +83,9 @@ sudo rm -rf /opt/nvim
 sudo tar -C /opt -xzf nvim-linux64.tar.gz
 rm nvim-linux64.tar.gz   
 
+# Install ruff (for python linting and lsp)
+curl -LsSf https://astral.sh/ruff/install.sh | sh
+
 # Install go
 source ~/dotfiles/scripts/setup_go.sh
 
