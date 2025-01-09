@@ -97,6 +97,12 @@ sudo apt update && sudo apt install github-desktop
 # Install docker (and docker-compose)
 source ~/dotfiles/scripts/setup_docker.sh
 
+# Setup gnome-tweaks
+sudo apt-get install gnome-tweaks
+# super + right click to resize windows (instead of super + middle click)
+gsettings set org.gnome.desktop.wm.preferences resize-with-right-button true
+
+
 # Echo the contents of manual-steps.txt to terminal
 cat ~/dotfiles/scripts/manual-steps.txt
 
