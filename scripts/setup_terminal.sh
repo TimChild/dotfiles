@@ -94,6 +94,8 @@ wget -qO - https://apt.packages.shiftkey.dev/gpg.key | gpg --dearmor | sudo tee 
 sudo sh -c 'echo "deb [arch=amd64 signed-by=/usr/share/keyrings/shiftkey-packages.gpg] https://apt.packages.shiftkey.dev/ubuntu/ any main" > /etc/apt/sources.list.d/shiftkey-packages.list'
 sudo apt update && sudo apt install github-desktop
 
+# Install docker (and docker-compose)
+source ~/dotfiles/scripts/setup_docker.sh
 
 # Echo the contents of manual-steps.txt to terminal
 cat ~/dotfiles/scripts/manual-steps.txt
