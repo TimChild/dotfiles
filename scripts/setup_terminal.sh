@@ -7,7 +7,6 @@
 ln -s ~/dotfiles/home/.gitconfig ~/.gitconfig
 ln -s ~/dotfiles/home/.ssh/config ~/.ssh/config
 ln -s ~/dotfiles/home/.zshrc ~/.zshrc
- 
 
 # Setup configs (that live in config directory)
 ln -s ~/dotfiles/config/tmux ~/.config
@@ -89,5 +88,13 @@ curl -LsSf https://astral.sh/ruff/install.sh | sh
 # Install go
 source ~/dotfiles/scripts/setup_go.sh
 
+# Install github desktop
+# https://github.com/shiftkey/desktop#installation-via-package-manager
+wget -qO - https://apt.packages.shiftkey.dev/gpg.key | gpg --dearmor | sudo tee /usr/share/keyrings/shiftkey-packages.gpg > /dev/null
+sudo sh -c 'echo "deb [arch=amd64 signed-by=/usr/share/keyrings/shiftkey-packages.gpg] https://apt.packages.shiftkey.dev/ubuntu/ any main" > /etc/apt/sources.list.d/shiftkey-packages.list'
+sudo apt update && sudo apt install github-desktop
+
+
 # Echo the contents of manual-steps.txt to terminal
 cat ~/dotfiles/scripts/manual-steps.txt
+
