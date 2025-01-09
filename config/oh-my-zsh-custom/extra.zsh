@@ -1,6 +1,6 @@
 source ~/dotfiles/task-completions.zsh
 
-export BUN_INSTALL="$HOME/.local/share/reflex/bun"
+# export BUN_INSTALL="$HOME/.local/share/reflex/bun"
 export PYENV_ROOT="$HOME/.pyenv"
 
 # List of directories to check
@@ -8,7 +8,7 @@ directories=(
     "$HOME/.local/bin"
     "/snap/bin"
     "/opt/nvim-linux64/bin"
-    "$BUN_INSTALL"
+    # "$BUN_INSTALL"
     "$PYENV_ROOT/bin"
 )
 
