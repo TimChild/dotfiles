@@ -23,6 +23,11 @@ sudo apt-get install -y xsel
 # Other tools that are useful
 sudo apt-get install -y gcc ripgrep make curl unzip
 
+# Setup alacritty terminal (not installing from snap doesn't work as default terminal)
+sudo apt-get install alacritty
+# Set as default terminal
+sudo update-alternatives --install /usr/bin/x-terminal-emulator x-terminal-emulator /usr/bin/alacritty 50
+
 # Install jetbrains nerdfont
 wget https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/JetBrainsMono.zip -P ~/Downloads
 mkdir ~/.fonts
