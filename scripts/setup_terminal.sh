@@ -98,6 +98,7 @@ sudo apt update && sudo apt install github-desktop
 source ~/dotfiles/scripts/setup_docker.sh
 
 # Setup gnome-tweaks
+# Note: This installs the gui to make it easier to see/explore additional settings. The settings below will work regardless.
 sudo apt-get install gnome-tweaks
 # super + right click to resize windows (instead of super + middle click)
 gsettings set org.gnome.desktop.wm.preferences resize-with-right-button true
