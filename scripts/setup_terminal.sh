@@ -28,6 +28,8 @@ sudo ln -s $(which fdfind) ~/.local/bin/fd
 sudo apt-get install alacritty
 # Set as default terminal
 sudo update-alternatives --install /usr/bin/x-terminal-emulator x-terminal-emulator /usr/bin/alacritty 50
+# install terminfo for alcritty (only if not already installed)
+infocmp alacritty &> /dev/null || (wget https://raw.githubusercontent.com/alacritty/alacritty/master/extra/alacritty.info && tic -xe alacritty,alacritty-direct alacritty.info && rm alacritty.info)
 
 # Install jetbrains nerdfont
 wget https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/JetBrainsMono.zip -P ~/Downloads
@@ -52,7 +54,7 @@ echo "Default shell change to zsh will be recognized after restart"
 
 
 # Setup tmux
-sudo snap install tmux --classic
+sudo apt-get install tmux
 git clone https://github.com/tmux-plugins/tpm ~/.config/tmux/plugins/tpm
 
 # Setup Taskfile
