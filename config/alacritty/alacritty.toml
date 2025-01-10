@@ -22,5 +22,5 @@ program = "zsh"
 # NOTE: Opening alacritty will jump straight into tmux 
 # - detaching tmux will close the terminal
 # - use <prefix>:new to create a new session
-# args = ["-l", "-c", "tmux attach || tmux"]
+args = ["-l", "-c", "tmux attach || tmux"]
 
