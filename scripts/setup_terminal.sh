@@ -110,6 +110,7 @@ gsettings set org.gnome.desktop.wm.preferences resize-with-right-button true
 # create a file ~/.ideavimrc with the following contents
 # set quickscope
 echo "set quickscope" > ~/.ideavimrc
+echo "let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']" >> ~/.ideavimrc
 
 # Echo the contents of manual-steps.txt to terminal
 cat ~/dotfiles/scripts/manual-steps.txt
