@@ -1,3 +1,8 @@
+# NOTE: [general] level needs to be a top (and not actually in [general] table)
+import = [
+	"~/.config/alacritty/catppuccin-mocha.toml",
+]
+
 [font.normal]
 family = "JetBrainsMono Nerd Font"
 
@@ -10,4 +15,12 @@ family = "JetBrainsMono Nerd Font"
 [font.bold_italic]
 family = "JetBrainsMono Nerd Font"
 
+[shell]
+program = "zsh"
+# -l -- login shell
+# -c -- command (execute the following command)
+# NOTE: Opening alacritty will jump straight into tmux 
+# - detaching tmux will close the terminal
+# - use <prefix>:new to create a new session
+args = ["-l", "-c", "tmux attach || tmux"]
 
