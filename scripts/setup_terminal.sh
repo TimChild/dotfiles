@@ -94,6 +94,9 @@ wget -qO - https://apt.packages.shiftkey.dev/gpg.key | gpg --dearmor | sudo tee 
 sudo sh -c 'echo "deb [arch=amd64 signed-by=/usr/share/keyrings/shiftkey-packages.gpg] https://apt.packages.shiftkey.dev/ubuntu/ any main" > /etc/apt/sources.list.d/shiftkey-packages.list'
 sudo apt update && sudo apt install github-desktop
 
+# Install github copilot in cli
+gh extension install github/copilot
+
 # Install docker (and docker-compose)
 source ~/dotfiles/scripts/setup_docker.sh
 
@@ -103,6 +106,10 @@ sudo apt-get install gnome-tweaks
 # super + right click to resize windows (instead of super + middle click)
 gsettings set org.gnome.desktop.wm.preferences resize-with-right-button true
 
+# Enable vim quickscope in pycharm
+# create a file ~/.ideavimrc with the following contents
+# set quickscope
+echo "set quickscope" > ~/.ideavimrc
 
 # Echo the contents of manual-steps.txt to terminal
 cat ~/dotfiles/scripts/manual-steps.txt
