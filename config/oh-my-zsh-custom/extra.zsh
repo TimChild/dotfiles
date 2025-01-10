@@ -7,7 +7,7 @@ export PYENV_ROOT="$HOME/.pyenv"
 directories=(
     "$HOME/.local/bin"
     "/snap/bin"
-    "/opt/nvim-linux64/bin"
+    "/opt/nvim/"
     # "$BUN_INSTALL"
     "$PYENV_ROOT/bin"
 )

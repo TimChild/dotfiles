@@ -20,7 +20,7 @@ sudo apt-get update
 # For clipboard support in tmux (could also use xclip)
 sudo apt-get install -y xsel
 # Other tools that are useful
-sudo apt-get install -y gcc ripgrep make curl unzip
+sudo apt-get install -y gcc ripgrep make curl unzip libfuse2
 
 # Setup alacritty terminal (not installing from snap doesn't work as default terminal)
 sudo apt-get install alacritty
@@ -77,10 +77,12 @@ source ~/.zshrc
 nvm install node
 
 # Install neovim (and setup custom config)
-curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz
-sudo rm -rf /opt/nvim
-sudo tar -C /opt -xzf nvim-linux64.tar.gz
-rm nvim-linux64.tar.gz   
+# curl -LO https://github.com/neovim/neovim/releases/download/nightly/nvim.appimage
+curl -LO https://github.com/neovim/neovim/releases/download/latest/nvim.appimage
+chmod u+x nvim.appimage
+sudo rm -rf /opt/nvim  # Remove any existing nvim directory
+sudo mkdir -p /opt/nvim
+sudo mv nvim.appimage /opt/nvim/nvim
 
 # Install ruff (for python linting and lsp)
 curl -LsSf https://astral.sh/ruff/install.sh | sh
