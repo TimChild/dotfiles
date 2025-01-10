@@ -20,7 +20,9 @@ sudo apt-get update
 # For clipboard support in tmux (could also use xclip)
 sudo apt-get install -y xsel
 # Other tools that are useful
-sudo apt-get install -y gcc ripgrep make curl unzip libfuse2
+sudo apt-get install -y gcc ripgrep fd-find make curl unzip libfuse2
+# fd-find (fd) is a faster alternative to find -- needs link setup to use via fd
+sudo ln -s $(which fdfind) ~/.local/bin/fd
 
 # Setup alacritty terminal (not installing from snap doesn't work as default terminal)
 sudo apt-get install alacritty
