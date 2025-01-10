@@ -21,7 +21,7 @@ sudo apt-get update
 sudo apt-get install -y xsel
 # Other tools that are useful
 sudo apt-get install -y gcc ripgrep fd-find make curl unzip libfuse2
-# fd-find (fd) is a faster alternative to find -- needs link setup to use via fd
+# fd-find (fd) is a faster alternative to find (used by treesitter) -- needs link setup to use via fd
 sudo ln -s $(which fdfind) ~/.local/bin/fd
 
 # Setup alacritty terminal (not installing from snap doesn't work as default terminal)
