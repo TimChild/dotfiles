@@ -8,11 +8,22 @@ ln -s ~/dotfiles/home/.gitconfig ~/.gitconfig
 ln -s ~/dotfiles/home/.ssh/config ~/.ssh/config
 ln -s ~/dotfiles/home/.zshrc ~/.zshrc
 
+
 # Setup configs (that live in config directory)
 ln -s ~/dotfiles/config/tmux ~/.config
 ln -s ~/dotfiles/config/nvim ~/.config
 ln -s ~/dotfiles/config/oh-my-zsh ~/.config
 ln -s ~/dotfiles/config/alacritty ~/.config
+# Setup clamav
+sudo ln -s ~/dotfiles/config/clamav/freshclam.conf /usr/local/etc/freshclam.conf
+sudo ln -s ~/dotfiles/config/clamav/clamd.conf /usr/local/etc/clamd.conf
+
+# Setup ufw firewall
+# Install gui (gufw) and enable
+sudo apt-get install -y gufw
+sudo ufw enable
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
 
 # Update before any other installs
 sudo apt-get update
@@ -117,6 +128,24 @@ gsettings set org.gnome.desktop.wm.preferences resize-with-right-button true
 # set quickscope
 echo "set quickscope" > ~/.ideavimrc
 echo "let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']" >> ~/.ideavimrc
+
+# Install antivirus (clamav) (config files already copied)
+sudo apt-get install -y clamav clamav-daemon
+sudo groupadd clamav
+sudo useradd -g clamav -s /bin/false -c "Clam Antivirus" clamav
+sudo chown -R clamav:clamav /usr/local/share/clamav
+sudo touch /var/log/freshclam.log
+sudo chmod 600 /var/log/freshclam.log
+sudo chown clamav:clamav /var/log/freshclam.log
+# Run freshclam to update virus definitions
+sudo freshclam
+# Add cron job to update virus definitions (23 is random minute to avoid conflicts)
+(sudo crontab -u clamav -l 2>/dev/null; echo "23 * * * * /usr/local/bin/freshclam") | sudo crontab -u clamav -
+# TODO: Still need to figure out something about setup (sudo clamtop returns and error even after starting clamd, also does clamd need to be started by crontab on startup?)
+# https://docs.clamav.net/manual/Usage/Scanning.html
+# Start running clamav daemon
+sudo clamd 
+
 
 # Echo the contents of manual-steps.txt to terminal
 cat ~/dotfiles/scripts/manual-steps.txt
