@@ -153,6 +153,12 @@ sudo freshclam
 sudo clamd 
 
 
+# Install Digital Ocean CLI
+wget https://github.com/digitalocean/doctl/releases/download/v1.120.1/doctl-1.120.1-linux-amd64.tar.gz
+tar xf doctl-1.120.1-linux-amd64.tar.gz
+sudo mv doctl /usr/local/bin
+rm doctl-1.120.1-linux-amd64.tar.gz
+
 # Echo the contents of manual-steps.txt to terminal
 cat ~/dotfiles/scripts/manual-steps.txt
 
