@@ -37,7 +37,7 @@ sudo apt-get update
 # For clipboard support in tmux (could also use xclip)
 sudo apt-get install -y xsel
 # Other tools that are useful
-sudo apt-get install -y gcc ripgrep fd-find make curl unzip libfuse2 htop lm-sensors
+sudo apt-get install -y gcc ripgrep fd-find make curl unzip libfuse2 htop lm-sensors tree
 # fd-find (fd) is a faster alternative to find (used by treesitter) -- needs link setup to use via fd
 sudo ln -s $(which fdfind) ~/.local/bin/fd
 

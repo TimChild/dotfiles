@@ -33,5 +33,13 @@ if ! grep -q "export PATH=\$PATH:/usr/local/go/bin" ~/.zshrc; then
   echo "Adding Go path export to ~/.zshrc..."
   echo "export PATH=\$PATH:/usr/local/go/bin" >> ~/.zshrc
 fi
+# Add Go path export to zshrc if not already present
+if ! grep -q "export PATH=\$PATH:$(go env GOPATH)/bin" ~/.bashrc; then
+  echo "Adding Go path export to ~/.zshrc..."
+  echo "export PATH=\$PATH:$(go env GOPATH)/bin" >> ~/.zshrc
+fi
+
+# install golint
+go install golang.org/x/lint/golint@latest
 
 echo "Go installation completed."
