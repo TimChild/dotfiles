@@ -3,6 +3,28 @@
 # This script is to set up the terminal with configurations etc. saved in dotfiles.
 
 
+# # Function that returns a boolean based on user input (y/n) (function should take prompt string, and default value)
+# function get_boolean_input() {
+#     local prompt=$1
+#     local default=$2
+#     local default_char
+#     if [ "$default" = true ]; then
+#         default_char="Y"
+#     else
+#         default_char="N"
+#     fi
+#     read -p "$prompt [$default_char]: " input
+#     if [ -z "$input" ]; then
+#         input=$default_char
+#     fi
+#     if [ "$input" = "Y" ] || [ "$input" = "y" ]; then
+#         return 1
+#     else
+#         return 0
+#     fi
+# }
+
+
 # Setup home directory configs
 ln -s ~/dotfiles/home/.gitconfig ~/.gitconfig
 ln -s ~/dotfiles/home/.ssh/config ~/.ssh/config
@@ -90,6 +112,7 @@ sudo pipx ensurepath --global
 pipx install poetry
 mkdir "$ZSH_CUSTOM/plugins/poetry"
 poetry completions zsh > "$ZSH_CUSTOM"/plugins/poetry/_poetry
+poetry self add poetry-plugin-export
 
 # Install npm (with nvm as a version manager_
 wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
@@ -158,6 +181,12 @@ wget https://github.com/digitalocean/doctl/releases/download/v1.120.1/doctl-1.12
 tar xf doctl-1.120.1-linux-amd64.tar.gz
 sudo mv doctl /usr/local/bin
 rm doctl-1.120.1-linux-amd64.tar.gz
+# Setut doctl auth
+# echo "Running doctl auth init... You'll need to login to Digital Ocean and follow instructions"
+# doctl auth init
+# # Setup ssh key for doctl
+# doctl compute ssh-key import $(whoami)-auto-script --public-key-file ~/.ssh/id_ed25519.pub
+
 
 # Echo the contents of manual-steps.txt to terminal
 cat ~/dotfiles/scripts/manual-steps.txt
