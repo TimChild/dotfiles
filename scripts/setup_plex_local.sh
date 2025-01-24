@@ -8,9 +8,12 @@ function heading() {
 }
 
 heading "Setting up Plex Media Server"
-echo "Checking for PLEX_CLAIM environment variable"
+# Get plex_claim from user input
+echo "Please enter your Plex claim code:"
+read -r PLEX_CLAIM
+
 if [ -z "$PLEX_CLAIM" ]; then
-    echo "Please set the PLEX_CLAIM environment variable"
+    echo "Please provied a PLEX_CLAIM"
     exit 1
 fi
 
@@ -63,5 +66,5 @@ services:
 EOF
 
 heading "Starting Plex Media Server"
-docker-compose up -d
+docker compose up -d
 

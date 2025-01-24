@@ -19,8 +19,7 @@ tasks:
       - test -f .env
     cmds:
       - echo "Generating new .env file"
-      - echo "PLEX_CLAIM=" > .env
-      - echo "PLEX_DATA_PATH=" >> .env
+      - echo "PLEX_DATA_PATH=/mnt/g" > .env
 
   init_secondary_drives:
     desc: "Initialize secondary drives (only needs to be done once)"
@@ -31,9 +30,9 @@ tasks:
     desc: "Set up plex to run locally"
     # Loads env from .env file
     env:
-      PLEX_CLAIM: "{{.PLEX_CLAIM}}"
       PLEX_DATA_PATH: "{{.PLEX_DATA_PATH}}"
     cmds:
+      - echo "{{.PLEX_DATA_PATH}}"
       - scripts/setup_plex_local.sh
 
   droplet_create_new:
