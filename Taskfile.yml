@@ -1,6 +1,8 @@
 # https://taskfile.dev
 
-version: '3'
+version: "3"
+
+dotenv: [".env"]
 
 vars:
   GREETING: Hello, World!
@@ -10,6 +12,29 @@ tasks:
     cmds:
       - echo "{{.GREETING}}"
     silent: true
+
+  init_dotenv:
+    desc: "Initialize the .env file"
+    status:
+      - test -f .env
+    cmds:
+      - echo "Generating new .env file"
+      - echo "PLEX_CLAIM=" > .env
+      - echo "PLEX_DATA_PATH=" >> .env
+
+  init_secondary_drives:
+    desc: "Initialize secondary drives (only needs to be done once)"
+    cmds:
+      - scripts/init_secondary_drives.sh
+
+  plex_setup_local:
+    desc: "Set up plex to run locally"
+    # Loads env from .env file
+    env:
+      PLEX_CLAIM: "{{.PLEX_CLAIM}}"
+      PLEX_DATA_PATH: "{{.PLEX_DATA_PATH}}"
+    cmds:
+      - scripts/setup_plex_local.sh
 
   droplet_create_new:
     desc: "Create a new DO droplet and initialize it"
@@ -39,12 +64,12 @@ tasks:
       - echo "Droplet '{{.NEW_DROPLET_NAME}}' created successfully -- waiting a few seconds for initial boot"
       - sleep 10
       - task: droplet_setup_new
-        vars: 
-          DROPLET_NAME: '{{.NEW_DROPLET_NAME}}'
+        vars:
+          DROPLET_NAME: "{{.NEW_DROPLET_NAME}}"
 
   droplet_setup_new:
     desc: "Perform initial setup of a new DO droplet. setting user permissions etc."
-    requires: 
+    requires:
       vars: [DROPLET_NAME]
     cmds:
       # Set up the droplet by running script there (if this failes, likely that droplet is already set up and blocking root login)
@@ -58,13 +83,13 @@ tasks:
 
       # Set up the droplet with some basic configuration
       - task: droplet_setup_config
-        vars: 
-          DROPLET_NAME: '{{.DROPLET_NAME}}'
+        vars:
+          DROPLET_NAME: "{{.DROPLET_NAME}}"
 
       # Install some useful tools
       - task: droplet_setup_docker
-        vars: 
-          DROPLET_NAME: '{{.DROPLET_NAME}}'
+        vars:
+          DROPLET_NAME: "{{.DROPLET_NAME}}"
 
   droplet_setup_docker:
     desc: "Set up docker on a droplet"
@@ -88,7 +113,7 @@ tasks:
       PLEX_DATA_SERVER: child@154.20.156.142
       PLEX_DATA_SERVER_PATH: "//TIM-PC/1Video"
     cmds:
-      - doctl compute ssh {{.DROPLET_NAME}} --ssh-user webadmin --ssh-command "bash -s" < scripts/setup_plex.sh
+      - doctl compute ssh {{.DROPLET_NAME}} --ssh-user webadmin --ssh-command "bash -s" < scripts/setup_plex_remote.sh
 
   droplet_extend_ssl_cert:
     desc: |
@@ -107,7 +132,7 @@ tasks:
       - doctl compute ssh {{.DROPLET_NAME}} --ssh-user webadmin --ssh-command "echo '$(< scripts/extend_ssl_cert.sh)' | bash -s -- {{.WEBSERVER_DIR}} {{.DOMAIN_NAMES}}"
 
   droplet_generate_ssk_key:
-    desc: | 
+    desc: |
       Generate a new SSH key pair, add the public key to known hosts on the droplet, and copy the private key to clipboard.
       Useful for setting up ssh keys on github actions etc.
 
@@ -127,7 +152,3 @@ tasks:
 
       # Print the private key to the console
       - cat /tmp/temp_ssh_key
-
-
-
-
