@@ -33,6 +33,7 @@ ln -s "$PLEX_DATA_PATH" remote_data
 heading "Creating local directories"
 mkdir plex_config
 mkdir transcode
+mkdir plex_PhotoTranscoder_cache
 
 heading "Creating compose file"
 cat <<EOF > docker-compose.yml
@@ -50,14 +51,14 @@ services:
       - PLEX_CLAIM=${PLEX_CLAIM}
     volumes:
       # Note: /config requires file locking to work properly, so network shares are risky (can grow to be >10s of GB)
-      - /webadmin/plex/plex_config:/config
-      - "/webadmin/plex/remote_data/Tv Programs:/tv"
-      - /webadmin/plex/remote_data/Films:/movies
-      - /webadmin/plex/remote_data:/all
+      - ./plex_config:/config
+      - "./remote_data/Tv Programs:/tv"
+      - ./remote_data/Films:/movies
+      - ./remote_data:/all
       # Explicitly set where to store temporary files during transcoding
-      - /webadmin/plex/transcode:/transcode
+      - ./transcode:/transcode
       # Explicitly set cache location (2024-11-30 -- don't remember why, maybe to be able to clean it up easily?)
-      - "/webadmin/plex/plex_PhotoTranscoder_cache:/config/Library/Application Support/Plex Media Server/Cache/PhotoTranscoder/"
+      - "./plex_PhotoTranscoder_cache:/config/Library/Application Support/Plex Media Server/Cache/PhotoTranscoder/"
     #restart: unless-stopped
     restart: always
       # network_mode: host
