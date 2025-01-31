@@ -111,6 +111,10 @@ sudo apt-get install pipx
 pipx ensurepath
 sudo pipx ensurepath --global
 
+# Install GitGuardian
+pipx install ggshield
+ggshield auth login
+
 # Setup poetry
 pipx install poetry
 mkdir "$ZSH_CUSTOM/plugins/poetry"
