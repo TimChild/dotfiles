@@ -141,6 +141,9 @@ curl -LsSf https://astral.sh/ruff/install.sh | sh
 # Install go
 source ~/dotfiles/scripts/setup_go.sh
 
+# Install lazydocker
+curl https://raw.githubusercontent.com/jesseduffield/lazydocker/master/scripts/install_update_linux.sh | bash
+
 # Install github desktop
 # https://github.com/shiftkey/desktop#installation-via-package-manager
 wget -qO - https://apt.packages.shiftkey.dev/gpg.key | gpg --dearmor | sudo tee /usr/share/keyrings/shiftkey-packages.gpg > /dev/null
