@@ -25,8 +25,8 @@ for i in "${!UUIDs[@]}"; do
   sudo mkdir -p "$MOUNT_PATH"
   sudo chown -R $USER:$USER "$MOUNT_PATH"
 
-  # Add to fstab
-  echo "UUID=$UUID $MOUNT_PATH ntfs-3g defaults,nls=utf8,umask=000,dmask=027,fmask=137,uid=1000,gid=1000,windows_names 0 0" | sudo tee -a /etc/fstab
+  # Add to fstab (Note: mask is reverse of octal -- 000 means everyone rwx, 027 means group can't write, 137 means others can't write)
+  echo "UUID=$UUID $MOUNT_PATH ntfs-3g defaults,nls=utf8,umask=000,dmask=022,fmask=133,uid=1000,gid=1000,windows_names 0 0" | sudo tee -a /etc/fstab
 done
 
 # Mount
