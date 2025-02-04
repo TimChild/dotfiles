@@ -204,7 +204,13 @@ rm doctl-1.120.1-linux-amd64.tar.gz
 # # Setup ssh key for doctl
 # doctl compute ssh-key import $(whoami)-auto-script --public-key-file ~/.ssh/id_ed25519.pub
 
+# Install onedriver (for access to OneDrive)
+echo 'deb http://download.opensuse.org/repositories/home:/jstaf/xUbuntu_23.10/ /' | sudo tee /etc/apt/sources.list.d/home:jstaf.list
+curl -fsSL https://download.opensuse.org/repositories/home:jstaf/xUbuntu_23.10/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/home_jstaf.gpg > /dev/null
+sudo apt update
+sudo apt install onedriver
 
 # Echo the contents of manual-steps.txt to terminal
 cat ~/dotfiles/scripts/manual-steps.txt
+
 
