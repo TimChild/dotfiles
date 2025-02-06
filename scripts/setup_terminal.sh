@@ -29,7 +29,8 @@
 ln -s ~/dotfiles/home/.gitconfig ~/.gitconfig
 ln -s ~/dotfiles/home/.ssh/config ~/.ssh/config
 ln -s ~/dotfiles/home/.zshrc ~/.zshrc
-
+# Allows using `task -g` to run home tasks from anywhere
+ln -s ~/dotfiles/Taskfile.yml ~/Taskfile.yml
 
 # Setup configs (that live in config directory)
 ln -s ~/dotfiles/config/tmux ~/.config
