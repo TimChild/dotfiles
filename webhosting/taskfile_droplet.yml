@@ -1,0 +1,123 @@
+# Tasks related to droplet management
+
+version: "3"
+
+tasks:
+  create_new:
+    desc: "Create a new DO droplet and initialize it"
+    requires:
+      vars: [NEW_DROPLET_NAME]
+    vars:
+      SIZE: '{{.SIZE | default "s-1vcpu-512mb-10gb"}}'
+      IMAGE: '{{.IMAGE | default "ubuntu-24-04-x64"}}'
+      REGION: '{{.REGION | default "sfo3"}}'
+      SSH_KEY_NAME: '{{.SSH_KEY_NAME | default "Tim-PC-ubuntu"}}'
+      PROJECT: '{{.PROJECT | default "Personal"}}'
+    preconditions:
+      - sh: doctl compute size list | grep -q {{.SIZE}}
+        msg: "Size '{{.SIZE}}' does not exist -- check doctl compute size list"
+      - sh: doctl compute image list-distribution | grep -q {{.IMAGE}}
+        msg: "Image '{{.IMAGE}}' does not exist -- check doctl compute image list-distribution"
+      - sh: doctl compute region list | grep -q {{.REGION}}
+        msg: "Region '{{.REGION}}' does not exist -- check doctl compute region list"
+      - sh: doctl compute ssh-key list | grep -q {{.SSH_KEY_NAME}}
+        msg: "SSH key '{{.SSH_KEY_NAME}}' does not exist -- check doctl compute ssh-key list"
+      - sh: doctl projects list | grep -q {{.PROJECT}}
+        msg: "Project '{{.PROJECT}}' does not exist -- check doctl projects list"
+      - sh: doctl compute droplet list | grep -q {{.NEW_DROPLET_NAME}} && exit 1 || exit 0
+        msg: "Droplet '{{.NEW_DROPLET_NAME}}' already exists -- choose a different name"
+    cmds:
+      - bash scripts/create_droplet.sh {{.NEW_DROPLET_NAME}} {{.SIZE}} {{.IMAGE}} {{.REGION}} {{.SSH_KEY_NAME}} {{.PROJECT}}
+      - echo "Droplet '{{.NEW_DROPLET_NAME}}' created successfully -- waiting a few seconds for initial boot"
+      - sleep 10
+      - task: setup_new
+        vars:
+          DROPLET_NAME: "{{.NEW_DROPLET_NAME}}"
+
+  setup_new:
+    desc: "Perform initial setup of a new DO droplet. setting user permissions etc."
+    requires:
+      vars: [DROPLET_NAME]
+    cmds:
+      # Set up the droplet by running script there (if this failes, likely that droplet is already set up and blocking root login)
+      - doctl compute ssh {{.DROPLET_NAME}} --ssh-user root --ssh-command "bash -s" < scripts/setup_droplet_security.sh
+
+      # Add the droplet to the local ssh config
+      - echo "Host {{.DROPLET_NAME}}" >> ~/.ssh/config
+      - echo "  HostName $(doctl compute droplet get {{.DROPLET_NAME}} --format PublicIPv4 --no-header)" >> ~/.ssh/config
+      - echo "  User webadmin" >> ~/.ssh/config
+      - echo "" >> ~/.ssh/config
+
+      # Set up the droplet with some basic configuration
+      - task: setup_config
+        vars:
+          DROPLET_NAME: "{{.DROPLET_NAME}}"
+
+      # Install some useful tools
+      - task: setup_docker
+        vars:
+          DROPLET_NAME: "{{.DROPLET_NAME}}"
+
+  setup_config:
+    desc: "Set up various other configuration tasks on a droplet"
+    requires:
+      vars: [DROPLET_NAME]
+    cmds:
+      - doctl compute ssh {{.DROPLET_NAME}} --ssh-user webadmin --ssh-command "bash -s" < scripts/setup_droplet_config.sh
+
+  setup_docker:
+    desc: "Set up docker on a droplet"
+    requires:
+      vars: [DROPLET_NAME]
+    cmds:
+      - doctl compute ssh {{.DROPLET_NAME}} --ssh-user webadmin --ssh-command "bash -s" < scripts/setup_docker.sh
+
+  setup_plex:
+    desc: "Set up plex to run on a droplet"
+    requires:
+      vars: [DROPLET_NAME]
+    vars:
+      PLEX_DATA_SERVER: child@154.20.156.142
+      PLEX_DATA_SERVER_PATH: "//TIM-PC/1Video"
+    cmds:
+      - doctl compute ssh {{.DROPLET_NAME}} --ssh-user webadmin --ssh-command "bash -s" < scripts/setup_plex_remote.sh
+
+  generate_ssk_key:
+    desc: |
+      Generate a new SSH key pair, add the public key to known hosts on the droplet, and copy the private key to clipboard.
+      Useful for setting up ssh keys on github actions etc.
+
+    requires:
+      vars: [DROPLET_NAME]
+    cmds:
+      # Generate a new SSH key pair without a passphrase
+      - ssh-keygen -t rsa -b 4096 -f /tmp/temp_ssh_key -N ""
+      - defer: rm /tmp/temp_ssh_key /tmp/temp_ssh_key.pub
+
+      - doctl compute ssh {{.DROPLET_NAME}} --ssh-user webadmin --ssh-command "echo $(cat /tmp/temp_ssh_key.pub) >> ~/.ssh/authorized_keys"
+      # Copy the private key to the clipboard
+      # (Linux would use xclip)
+      # - cat /tmp/temp_ssh_key | xclip -selection clipboard
+      # (WSL2 use the windows clip.exe)
+      - cat /tmp/temp_ssh_key | clip.exe
+
+      # Print the private key to the console
+      - cat /tmp/temp_ssh_key
+
+  extend_ssl_cert:
+    desc: |
+      Extend the SSL certificates with e.g. a new subdomain 
+      E.g. task extend_ssl_cert DOMAIN_NAMES="adventuresoftim.com,www.adventuresoftim.com,ceracool.adventuresoftim.com"
+      Note: ALL domains must be listed (the existing ones) as well as any new ones.
+    requires:
+      vars: [DROPLET_NAME, DOMAIN_NAMES]
+    vars:
+      # Note: This is for the `webserver` dir that I use in my basic reflex website setup
+      WEBSERVER_DIR: '{{.WEBSERVER_DIR | default "/home/webadmin/aot/webserver"}}'
+    preconditions:
+      # Just fail with a message that this needs to be updated before use
+      - sh: "[1 -eq 0]"
+        msg: "This task needs to be checked/updated before use"
+    cmds:
+      - echo "Extending SSL certificates for {{.DOMAIN_NAMES}} with webserver dir {{.WEBSERVER_DIR}}"
+      - doctl compute ssh {{.DROPLET_NAME}} --ssh-user webadmin --ssh-command "echo '$(< scripts/extend_ssl_cert.sh)' | bash -s -- {{.WEBSERVER_DIR}} {{.DOMAIN_NAMES}}"
