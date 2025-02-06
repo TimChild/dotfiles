@@ -23,6 +23,9 @@ tasks:
     silent: true
 
   new-revealjs:
-    desc: "Create a new reveal.js presentation in current directory (clones from github, installs,"
+    desc: "Create a new reveal.js presentation in current directory (clones from github). Optionally provide SUBDIR to specify a subdirectory."
+    vars:
+      SUBDIR: '{{default "" .SUBDIR}}'
     cmds:
-      - scripts/new-revealjs.sh "{{.USER_WORKING_DIR}}"
+      - echo "Creating new reveal.js presentation in {{.USER_WORKING_DIR}}/{{.SUBDIR}}"
+      - scripts/new-revealjs.sh "{{.USER_WORKING_DIR}}" "{{.SUBDIR}}"
