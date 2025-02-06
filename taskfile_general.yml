@@ -1,0 +1,35 @@
+# https://taskfile.dev
+
+version: "3"
+
+vars:
+  GREETING: Hello, World!
+
+tasks:
+  hello:
+    cmds:
+      - echo "{{.GREETING}}"
+      - echo "Taskfile default dir is {{.TASK_DIR}}"
+    silent: true
+
+  init_dotenv:
+    desc: "Initialize the .env file"
+    status:
+      - test -f ~/.env
+    cmds:
+      - echo "Generating new ~/.env file"
+      - echo "PLEX_DATA_PATH=/mnt/g" > ~/.env
+
+  init_secondary_drives:
+    desc: "Initialize secondary drives (only needs to be done once)"
+    cmds:
+      - scripts/init_secondary_drives.sh
+
+  plex_setup_local:
+    desc: "Set up plex to run locally"
+    # Loads env from .env file
+    env:
+      PLEX_DATA_PATH: "{{.PLEX_DATA_PATH}}"
+    cmds:
+      - echo "{{.PLEX_DATA_PATH}}"
+      - scripts/setup_plex_local.sh

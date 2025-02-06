@@ -1,0 +1,22 @@
+# This taskfile is linked in the home directory so that it can be used
+# globally via `task -g <taskname>`
+version: "3"
+
+# NOTE: Any included taskfiles CANNOT use the `dotenv` directive
+
+dotenv: ["~/.env"]
+
+includes:
+  # NOTE: Tasks will default to running in the home directory (or wherever this taskfile is executed from) if no `dir` is specified
+
+  web:
+    taskfile: ~/dotfiles/webhosting/Taskfile.yml
+    optional: true
+    dir: ~/dotfiles/webhosting
+
+  general:
+    taskfile: ~/dotfiles/taskfile_general.yml
+    optional: false
+    dir: ~/dotfiles
+    # Import these tasks as if they live in this taskfile
+    flatten: true
