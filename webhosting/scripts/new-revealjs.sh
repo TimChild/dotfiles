@@ -1,5 +1,7 @@
 #!/bin/bash
-# Copies the latest version of reveal.js to a specified directory
+# Copies the latest version of reveal.js to a specified directory (and installs deps)
+# First argument is the destination directory, second argument is the subdirectory (optional)
+# Note: excludes .git and .github directories
 
 # Check if destination directory is provided
 if [ -z "$1" ]; then
@@ -7,8 +9,17 @@ if [ -z "$1" ]; then
   exit 1
 fi
 
-DEST_DIR="$1"/reveal_slideshow
+
+DEST_DIR="$1"
+SUB_DIR="$2"
 TEMP_DIR="/tmp/revealjs_clone"
+
+# If the subdirectory is provided, append it to the destination directory
+if [ -n "$SUB_DIR" ]; then
+  DEST_DIR="$DEST_DIR/$SUB_DIR"
+else
+  DEST_DIR="$DEST_DIR/revealjs_slideshow"
+fi
 
 # Clone or update the repository
 if [ ! -d "$TEMP_DIR/.git" ]; then
@@ -20,7 +31,7 @@ else
 fi
 
 # Copy contents to destination directory, excluding .git and .github
-rsync -avq --exclude=".git" --exclude=".github" "$TEMP_DIR/" "$DEST_DIR/"
+rsync -aq --exclude=".git" --exclude=".github" "$TEMP_DIR/" "$DEST_DIR/"
 
 echo "Reveal.js copied to $DEST_DIR"
 
