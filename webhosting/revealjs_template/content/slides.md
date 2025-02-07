@@ -2,8 +2,9 @@
 
 Enter "S"peaker mode to see notes.
 
-Note: This only shows up in "S"peaker mode.
-notes: Same as this (N/note(s):)
+note:
+
+- Any notes after `note:` or `Notes:` will be displayed in the speaker notes only.
 
 ---
 
@@ -16,3 +17,12 @@ notes: Same as this (N/note(s):)
 ---
 
 ## Example third slide title
+
+---
+
+```python [1|2-3|]
+def example_code():
+    print("Hello, World!")
+    #  comment
+    return "Hello, World!"
+```
