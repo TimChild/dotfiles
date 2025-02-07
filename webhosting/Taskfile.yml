@@ -22,7 +22,7 @@ tasks:
       - echo "Running from:" {{.USER_WORKING_DIR}}
     silent: true
 
-  new-revealjs:
+  new-slideshow:
     desc: "Create a new reveal.js presentation in current directory (clones from github). Optionally provide SUBDIR to specify a subdirectory."
     vars:
       SUBDIR: '{{default "" .SUBDIR}}'
