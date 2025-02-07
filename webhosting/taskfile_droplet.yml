@@ -3,7 +3,7 @@
 version: "3"
 
 tasks:
-  create_new:
+  create-new:
     desc: "Create a new DO droplet and initialize it"
     requires:
       vars: [NEW_DROPLET_NAME]
@@ -30,11 +30,11 @@ tasks:
       - bash scripts/create_droplet.sh {{.NEW_DROPLET_NAME}} {{.SIZE}} {{.IMAGE}} {{.REGION}} {{.SSH_KEY_NAME}} {{.PROJECT}}
       - echo "Droplet '{{.NEW_DROPLET_NAME}}' created successfully -- waiting a few seconds for initial boot"
       - sleep 10
-      - task: setup_new
+      - task: setup-new
         vars:
           DROPLET_NAME: "{{.NEW_DROPLET_NAME}}"
 
-  setup_new:
+  setup-new:
     desc: "Perform initial setup of a new DO droplet. setting user permissions etc."
     requires:
       vars: [DROPLET_NAME]
@@ -49,30 +49,30 @@ tasks:
       - echo "" >> ~/.ssh/config
 
       # Set up the droplet with some basic configuration
-      - task: setup_config
+      - task: setup-config
         vars:
           DROPLET_NAME: "{{.DROPLET_NAME}}"
 
       # Install some useful tools
-      - task: setup_docker
+      - task: setup-docker
         vars:
           DROPLET_NAME: "{{.DROPLET_NAME}}"
 
-  setup_config:
+  setup-config:
     desc: "Set up various other configuration tasks on a droplet"
     requires:
       vars: [DROPLET_NAME]
     cmds:
       - doctl compute ssh {{.DROPLET_NAME}} --ssh-user webadmin --ssh-command "bash -s" < scripts/setup_droplet_config.sh
 
-  setup_docker:
+  setup-docker:
     desc: "Set up docker on a droplet"
     requires:
       vars: [DROPLET_NAME]
     cmds:
       - doctl compute ssh {{.DROPLET_NAME}} --ssh-user webadmin --ssh-command "bash -s" < scripts/setup_docker.sh
 
-  setup_plex:
+  setup-plex:
     desc: "Set up plex to run on a droplet"
     requires:
       vars: [DROPLET_NAME]
@@ -82,7 +82,7 @@ tasks:
     cmds:
       - doctl compute ssh {{.DROPLET_NAME}} --ssh-user webadmin --ssh-command "bash -s" < scripts/setup_plex_remote.sh
 
-  generate_ssk_key:
+  generate-ssk-key:
     desc: |
       Generate a new SSH key pair, add the public key to known hosts on the droplet, and copy the private key to clipboard.
       Useful for setting up ssh keys on github actions etc.
@@ -104,10 +104,10 @@ tasks:
       # Print the private key to the console
       - cat /tmp/temp_ssh_key
 
-  extend_ssl_cert:
+  extend-ssl-cert:
     desc: |
       Extend the SSL certificates with e.g. a new subdomain 
-      E.g. task extend_ssl_cert DOMAIN_NAMES="adventuresoftim.com,www.adventuresoftim.com,ceracool.adventuresoftim.com"
+      E.g. task extend-ssl-cert DOMAIN_NAMES="adventuresoftim.com,www.adventuresoftim.com,ceracool.adventuresoftim.com"
       Note: ALL domains must be listed (the existing ones) as well as any new ones.
     requires:
       vars: [DROPLET_NAME, DOMAIN_NAMES]
