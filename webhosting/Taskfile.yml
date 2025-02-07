@@ -26,6 +26,8 @@ tasks:
     desc: "Create a new reveal.js presentation in current directory (clones from github). Optionally provide SUBDIR to specify a subdirectory."
     vars:
       SUBDIR: '{{default "" .SUBDIR}}'
+    prerequisites:
+      - test -d "{{.TASKFILE_DIR}}/revealjs_template"
     cmds:
       - echo "Creating new reveal.js presentation in {{.USER_WORKING_DIR}}/{{.SUBDIR}}"
-      - scripts/new-revealjs.sh "{{.USER_WORKING_DIR}}" "{{.SUBDIR}}"
+      - scripts/new-revealjs.sh "{{.TASKFILE_DIR}}/revealjs_template" "{{.USER_WORKING_DIR}}" "{{.SUBDIR}}"
