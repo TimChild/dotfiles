@@ -40,12 +40,13 @@ tasks:
       vars: [DROPLET_NAME]
     cmds:
       # Set up the droplet by running script there (if this failes, likely that droplet is already set up and blocking root login)
-      - doctl compute ssh {{.DROPLET_NAME}} --ssh-user root --ssh-command "bash -s" < scripts/setup_droplet_security.sh
+      - ssh {{ .DROPLET_NAME }} < scripts/setup_droplet_security.sh
 
       # Add the droplet to the local ssh config
       - echo "Host {{.DROPLET_NAME}}" >> ~/.ssh/config
       - echo "  HostName $(doctl compute droplet get {{.DROPLET_NAME}} --format PublicIPv4 --no-header)" >> ~/.ssh/config
       - echo "  User webadmin" >> ~/.ssh/config
+      - echo "  IdentityFile ~/.ssh/id_ed25519" >> ~/.ssh/config
       - echo "" >> ~/.ssh/config
 
       # Set up the droplet with some basic configuration
@@ -63,14 +64,22 @@ tasks:
     requires:
       vars: [DROPLET_NAME]
     cmds:
-      - doctl compute ssh {{.DROPLET_NAME}} --ssh-user webadmin --ssh-command "bash -s" < scripts/setup_droplet_config.sh
+      - ssh {{ .DROPLET_NAME }} < scripts/setup_droplet_config.sh
 
   setup-docker:
     desc: "Set up docker on a droplet"
     requires:
       vars: [DROPLET_NAME]
     cmds:
-      - doctl compute ssh {{.DROPLET_NAME}} --ssh-user webadmin --ssh-command "bash -s" < scripts/setup_docker.sh
+      - ssh {{.DROPLET_NAME}} < scripts/setup_docker.sh
+
+  setup-webserver:
+    desc: "One-time setup to make the droplet a webserver"
+    requires:
+      vars: [DROPLET_NAME]
+    cmds:
+      - scripts/send-webserver-config.sh {{.DROPLET_NAME}}
+      - ssh {{.DROPLET_NAME}} < scripts/setup_webserver.sh
 
   setup-plex:
     desc: "Set up plex to run on a droplet"
@@ -80,7 +89,7 @@ tasks:
       PLEX_DATA_SERVER: child@154.20.156.142
       PLEX_DATA_SERVER_PATH: "//TIM-PC/1Video"
     cmds:
-      - doctl compute ssh {{.DROPLET_NAME}} --ssh-user webadmin --ssh-command "bash -s" < scripts/setup_plex_remote.sh
+      - ssh {{ .DROPLET_NAME }} < scripts/setup_plex_remote.sh
 
   generate-ssk-key:
     desc: |
@@ -94,7 +103,7 @@ tasks:
       - ssh-keygen -t rsa -b 4096 -f /tmp/temp_ssh_key -N ""
       - defer: rm /tmp/temp_ssh_key /tmp/temp_ssh_key.pub
 
-      - doctl compute ssh {{.DROPLET_NAME}} --ssh-user webadmin --ssh-command "echo $(cat /tmp/temp_ssh_key.pub) >> ~/.ssh/authorized_keys"
+      - ssh {{ .DROPLET_NAME }} "echo $(cat /tmp/temp_ssh_key.pub) >> ~/.ssh/authorized_keys"
       # Copy the private key to the clipboard
       # (Linux would use xclip)
       # - cat /tmp/temp_ssh_key | xclip -selection clipboard
@@ -120,4 +129,4 @@ tasks:
         msg: "This task needs to be checked/updated before use"
     cmds:
       - echo "Extending SSL certificates for {{.DOMAIN_NAMES}} with webserver dir {{.WEBSERVER_DIR}}"
-      - doctl compute ssh {{.DROPLET_NAME}} --ssh-user webadmin --ssh-command "echo '$(< scripts/extend_ssl_cert.sh)' | bash -s -- {{.WEBSERVER_DIR}} {{.DOMAIN_NAMES}}"
+      - ssh {{ .DROPLET_NAME }} "echo '$(< scripts/extend_ssl_cert.sh)' | bash -s -- {{.WEBSERVER_DIR}} {{.DOMAIN_NAMES}}"
