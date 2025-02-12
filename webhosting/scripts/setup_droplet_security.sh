@@ -43,8 +43,8 @@ echo "   Restarting SSH"
 systemctl restart ssh
 
 heading "Updating/Upgrading packages"
-apt update > /dev/null
-apt upgrade -y > /dev/null
+apt-get update > /dev/null
+apt-get upgrade -y > /dev/null
 
 
 heading "Droplet setup complete"
