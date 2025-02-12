@@ -41,6 +41,9 @@ ln -s ~/dotfiles/config/alacritty ~/.config
 sudo ln -s ~/dotfiles/config/clamav/freshclam.conf /usr/local/etc/freshclam.conf
 sudo ln -s ~/dotfiles/config/clamav/clamd.conf /usr/local/etc/clamd.conf
 
+# Setup .ssh sockets directory (for ssh multiplexing -- fast sequential ssh connections)
+mkdir -p ~/.ssh/sockets
+
 # Install flatpack (package manager similar to snap) -- gnome plugin updates the "software" app
 # # 2025-01-19 -- Both of these should only be used for gui apps (not cli)... Every time I've used them for something I access from cli, it has
 # # caused be trouble (e.g. docker, pyenv, nvim, etc.)
