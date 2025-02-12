@@ -1,0 +1,13 @@
+http://adventuresoftim.com http://www.adventuresoftim.com www.adventuresoftim.com {
+	redir https://adventuresoftim.com{uri}
+}
+
+
+adventuresoftim.com {
+	root * /srv/www/aot
+	file_server
+
+	handle_path /_event* {
+		reverse_proxy aot-backend:8000
+	}
+}
