@@ -17,7 +17,7 @@ if [ -z "$droplet_name" ]; then
     exit 1
 fi
 
-heading "Sending webserver config to droplet"
+heading "Sending webserver config to droplet ($droplet_name)"
 
 scp {caddy-compose.yaml,Caddyfile} $droplet_name:~/
 

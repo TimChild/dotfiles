@@ -38,8 +38,9 @@ tasks:
       vars: [DROPLET_NAME]
     cmds:
       - scripts/send-webserver-config.sh "{{.DROPLET_NAME}}"
+      - ssh {{.DROPLET_NAME}} < scripts/webserver-update-static-files.sh
       # Do a quick caddy reload (sufficient for minor changes)
-      - ssh {{.DROPLET_NAME}} "docker exec caddy_server caddy reload --config /etc/caddy/Caddyfile"
+      - ssh {{.DROPLET_NAME}} "docker exec caddy_server caddy reload --config /etc/caddy/Caddyfile || docker compose -f caddy-compose.yaml up -d"
       - task: _caddy_restart_compose_if_changed
         vars:
           DROPLET_NAME: "{{.DROPLET_NAME}}"

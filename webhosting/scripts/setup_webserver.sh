@@ -32,12 +32,18 @@ if [ ! -d sites-enabled ]; then
     exit 1
 fi
 
+# Allow http and https traffic
+sudo ufw allow http
+sudo ufw allow https
 
 # Create a www directory within `/srv`
 sudo mkdir -p /srv/www
 
 # Start Caddy using docker-compose
 docker compose -f caddy-compose.yaml up -d
+
+# Create scripts directory (separately send the webserver-update-static-files.sh script)
+mkdir -p ~/scripts
 
 heading "Webserver setup complete (Caddy is running)"
 

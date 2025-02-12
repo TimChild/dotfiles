@@ -80,6 +80,7 @@ tasks:
     cmds:
       - scripts/send-webserver-config.sh {{.DROPLET_NAME}}
       - ssh {{.DROPLET_NAME}} < scripts/setup_webserver.sh
+      - scp scripts/webserver-update-static-files.sh {{.DROPLET_NAME}}:~/scripts/webserver-update-static-files.sh
 
   setup-plex:
     desc: "Set up plex to run on a droplet"

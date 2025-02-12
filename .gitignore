@@ -9,3 +9,6 @@ config/nvim-old
 
 # Don't push secrets to github
 .env
+
+# Taskfile cache
+*/.task
