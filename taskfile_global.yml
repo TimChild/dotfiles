@@ -2,9 +2,8 @@
 # globally via `task -g <taskname>`
 version: "3"
 
-# NOTE: Any included taskfiles CANNOT use the `dotenv` directive
-
-dotenv: ["~/.env"]
+# NOTE: do NOT include any `.env` because it prevents taskfile from being included in any
+# other taskfile
 
 includes:
   # NOTE: Tasks will default to running in the home directory (or wherever this taskfile is executed from) if no `dir` is specified
