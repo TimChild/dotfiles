@@ -32,20 +32,31 @@ tasks:
       - echo "Creating new reveal.js presentation in {{.USER_WORKING_DIR}}/{{.SUBDIR}}"
       - scripts/new-revealjs.sh "{{.TASKFILE_DIR}}/revealjs_template" "{{.USER_WORKING_DIR}}" "{{.SUBDIR}}"
 
-  deploy-static:
-    desc: "Deploy website (static files) to droplet"
+  init-new-static-site:
+    desc: "Initialize a new static site on the webserver droplet"
     requires:
-      vars: [DROPLET_NAME, WEB_DIR]
+      vars: [DROPLET_NAME, SITE_NAME]
+    cmds:
+      - |
+        echo "Initializing new static site on droplet {{.DROPLET_NAME}}:srv/www/{{.SITE_NAME}}"
+      - scripts/setup-webserver-new-static-site.sh "{{.DROPLET_NAME}}" "{{.SITE_NAME}}"
+      #
+
+  deploy-static:
+    desc: "Deploy website (static files) to droplet (requires STATIC_DIR and SITE_NAME)"
+    requires:
+      vars: [DROPLET_NAME, SITE_NAME]
     vars:
       STATIC_DIR: '{{default "static" .STATIC_DIR}}'
       _FULL_DIR: "{{.USER_WORKING_DIR}}/{{.STATIC_DIR}}/"
     preconditions:
       - sh: test -d "{{.USER_WORKING_DIR}}/{{.STATIC_DIR}}"
-        msg: "Directory {{.USER_WORKING_DIR}}/{{.STATIC_DIR}} does not exist"
+        msg: "Directory {{.USER_WORKING_DIR}}/{{.STATIC_DIR}} does not exist (maybe need to set the STATIC_DIR variable?)"
     cmds:
-      - echo "Deploying static files from {{._FULL_DIR}} to droplet {{.DROPLET_NAME}}/srv/www/{{.WEB_DIR}}"
+      - |
+        echo "Deploying static files from {{._FULL_DIR}} to droplet {{.DROPLET_NAME}}:srv/www/{{.SITE_NAME}}"
       # First copy to the webserver user directory
-      - rsync -avz --delete {{._FULL_DIR}}/ {{.DROPLET_NAME}}:sites/{{.WEB_DIR}}/static/
+      - rsync -avz --delete {{._FULL_DIR}}/ {{.DROPLET_NAME}}:sites/{{.SITE_NAME}}/static/
       - task: caddy-reload
         vars:
           DROPLET_NAME: "{{.DROPLET_NAME}}"

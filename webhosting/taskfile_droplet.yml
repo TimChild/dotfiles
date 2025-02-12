@@ -40,7 +40,8 @@ tasks:
       vars: [DROPLET_NAME]
     cmds:
       # Set up the droplet by running script there (if this failes, likely that droplet is already set up and blocking root login)
-      - ssh {{ .DROPLET_NAME }} < scripts/setup_droplet_security.sh
+      # Note: This one can't use the shorthand `ssh {{.DROPLET_NAME}} ...` because this task sets that up
+      - doctl compute ssh {{ .DROPLET_NAME }} --ssh-key-path ~/.ssh/id_ed25519 --ssh-user root --ssh-command "bash -s " < scripts/setup_droplet_security.sh
 
       # Add the droplet to the local ssh config
       - echo "Host {{.DROPLET_NAME}}" >> ~/.ssh/config
