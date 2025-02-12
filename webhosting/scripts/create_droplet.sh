@@ -1,5 +1,6 @@
 #!/bin/bash
-# This script creates a new droplet on DigitalOcean
+# This script creates a new droplet on DigitalOcean (no extra setup other that providing the
+# ssk key id and project id during creation)
 
 
 # Exit on error
@@ -35,11 +36,12 @@ if [ -z "$name" ] || [ -z "$size" ] || [ -z "$image" ] || [ -z "$region" ] || [ 
 fi
 
 # Determine SSH key id by name
-ssh_key_id=$(doctl compute ssh-key list | grep -w "Tim-PC-ubuntu" | awk '{print $1}')
+ssh_key_id=$(doctl compute ssh-key list | grep -w $ssh_key_name | awk '{print $1}')
 
 # Determine project id by name
 project_id=$(doctl projects list | grep -w "$project_name" | awk '{print $1}')
 
+echo "creating droplet..."
 
 doctl compute droplet create "$name"\
     --size "$size"\

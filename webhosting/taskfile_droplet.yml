@@ -11,7 +11,7 @@ tasks:
       SIZE: '{{.SIZE | default "s-1vcpu-512mb-10gb"}}'
       IMAGE: '{{.IMAGE | default "ubuntu-24-04-x64"}}'
       REGION: '{{.REGION | default "sfo3"}}'
-      SSH_KEY_NAME: '{{.SSH_KEY_NAME | default "Tim-PC-ubuntu"}}'
+      SSH_KEY_NAME: '{{.SSH_KEY_NAME | default "tim-linux"}}'
       PROJECT: '{{.PROJECT | default "Personal"}}'
     preconditions:
       - sh: doctl compute size list | grep -q {{.SIZE}}

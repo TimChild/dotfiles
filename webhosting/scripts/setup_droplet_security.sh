@@ -42,6 +42,10 @@ sed -i 's/PasswordAuthentication yes/PasswordAuthentication no/' /etc/ssh/sshd_c
 echo "   Restarting SSH"
 systemctl restart ssh
 
+heading "Updating/Upgrading packages"
+apt update > /dev/null
+apt upgrade -y > /dev/null
+
 
 heading "Droplet setup complete"
 
