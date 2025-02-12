@@ -1,0 +1,6 @@
+docs.athenainstruments.com {
+	encode gzip
+
+	root * /srv/www/athena-docs
+	file_server
+}
