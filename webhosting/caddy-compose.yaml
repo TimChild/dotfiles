@@ -1,0 +1,20 @@
+# This is the compose file the Caddy container will use
+
+services:
+  caddy:
+    image: caddy:latest
+    container_name: caddy_server
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - ./sites-enabled:/etc/caddy/sites-enabled
+      - /srv:/srv
+      - caddy_data:/data
+      - caddy_config:/config
+
+volumes:
+  caddy_data:
+  caddy_config:
