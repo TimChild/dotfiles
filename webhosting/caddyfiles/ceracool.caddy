@@ -1,0 +1,15 @@
+# NOTE 2025-02-11: This was never actually used (was previously an nginx setup)
+
+http://ceracool.ca http://www.ceracool.ca www.ceracool.ca {
+	redir https://ceracool.ca{uri}
+}
+
+ceracool.ca {
+	root * /srv/www/ceracool_site
+	file_server
+
+	handle_path /_event* {
+		reverse_proxy ceracool-backend:8000
+	}
+}
+
