@@ -22,6 +22,6 @@ heading "Sending webserver config to droplet"
 scp {caddy-compose.yaml,Caddyfile} $droplet_name:~/
 
 # Delete and Re-populate the `sites-enabled` directory 
-rsync -av --delete ./sites-enabled/ $droplet_name:~/sites-enabled/
+rsync -avL --delete ./sites-enabled/ $droplet_name:~/sites-enabled/
 
 
