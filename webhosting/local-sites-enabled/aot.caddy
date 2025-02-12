@@ -1,0 +1,8 @@
+http://localhost {
+	redir https://{host}{uri}:8443
+}
+
+localhost {
+	root * /srv/www/aot/
+	file_server
+}

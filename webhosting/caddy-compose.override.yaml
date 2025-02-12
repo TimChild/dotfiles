@@ -3,3 +3,6 @@ services:
     ports: !override
       - "8080:80"
       - "8443:443"
+    volumes:
+      - ./local-sites-enabled:/etc/caddy/sites-enabled
+      - ~/github/adventuresoftim/site/:/srv/www/aot
