@@ -31,3 +31,26 @@ tasks:
     cmds:
       - echo "Creating new reveal.js presentation in {{.USER_WORKING_DIR}}/{{.SUBDIR}}"
       - scripts/new-revealjs.sh "{{.TASKFILE_DIR}}/revealjs_template" "{{.USER_WORKING_DIR}}" "{{.SUBDIR}}"
+
+  caddy-reload:
+    desc: "Reload the Caddy webserver after sending any configuration changes"
+    requires:
+      vars: [DROPLET_NAME]
+    cmds:
+      - scripts/send-webserver-config.sh "{{.DROPLET_NAME}}"
+      # Do a quick caddy reload (sufficient for minor changes)
+      - ssh {{.DROPLET_NAME}} "docker exec caddy_server caddy reload --config /etc/caddy/Caddyfile"
+      - task: _caddy_restart_compose_if_changed
+        vars:
+          DROPLET_NAME: "{{.DROPLET_NAME}}"
+
+  _caddy_restart_compose_if_changed:
+    silent: true
+    desc: "Fully restarts the docker compose services if the compose file has changed (locally)"
+    requires:
+      vars: [DROPLET_NAME]
+    sources:
+      - caddy-compose.yaml
+    cmds:
+      # Fully stop and start in case any changes made to compose file
+      - ssh {{.DROPLET_NAME}} "docker compose -f caddy-compose.yaml down && docker compose -f caddy-compose.yaml up -d"
