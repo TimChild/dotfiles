@@ -4,10 +4,16 @@ http://adventuresoftim.com http://www.adventuresoftim.com www.adventuresoftim.co
 
 
 adventuresoftim.com {
-	root * /srv/www/aot
-	file_server
+	encode gzip
 
-	handle_path /_event* {
+	@backend_routes path /_event/* /ping /_upload /_updload/*
+	handle @backend_routes {
 		reverse_proxy aot-backend:8000
+	}
+
+	root * /srv/www/aot
+	route {
+		try_files {path} {path}/ /404.html
+		file_server
 	}
 }
