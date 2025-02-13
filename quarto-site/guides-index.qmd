@@ -1,0 +1,15 @@
+---
+title: "Guides"
+listing:
+  contents: guides
+  sort: "date desc"
+  type: default
+  categories: true
+  sort-ui: false
+  filter-ui: false
+page-layout: full
+title-block-banner: true
+---
+
+This is a collection of guides and useful notes that I have compiled over time.
+

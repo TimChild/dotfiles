@@ -1,0 +1,9 @@
+---
+title: "Tim's Dotfiles"
+---
+
+This is a [quarto](https://quarto.org) site for my dotfiles. For my actual personal site, visit [adventuresoftim.com](https://adventuresoftim.com).
+
+
+See the [guides](guides-index.html) for more information on how to use this site.
+

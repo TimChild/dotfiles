@@ -1,0 +1,29 @@
+---
+title: "Adding a post"
+date: "2025-02-12"
+categories: [quarto, dotfiles]
+---
+
+# How to add more posts
+
+How to add a new post to the site.
+
+## Creating a new post
+
+In `~/dotfiles/quarto-site/guides/` add a new directory with a `.qmd` file that contains 
+frontmatter like
+
+```yaml
+---
+title: "Adding a post"
+date: "2025-02-12"
+categories: [code, dotfiles]
+---
+```
+
+Then just write the content in markdown and quarto will handle the rendering.
+
+## Deploying changes
+
+Run `task quarto:deploy-dotfiles` to deploy the changes.
+

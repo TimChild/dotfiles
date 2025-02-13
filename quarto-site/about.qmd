@@ -1,0 +1,20 @@
+---
+title: "About"
+image: profile.jpg
+about:
+  template: jolla
+  links:
+    - icon: linkedin
+      text: LinkedIn
+      href: https://linkedin.com/tim-child-000/
+    - icon: github
+      text: Github
+      href: https://github.com/TimChild/	
+    - icon: house-heart
+      text: Personal site
+      href: https://adventuresoftim.com
+---
+
+This is a documentation site for my dotfiles. For my actual personal site, visit [adventuresoftim.com](https://adventuresoftim.com).
+
+This is just where I keep track of guides etc.

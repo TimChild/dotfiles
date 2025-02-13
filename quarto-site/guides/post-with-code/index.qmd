@@ -1,0 +1,72 @@
+---
+title: "Posts that include executable code"
+date: "2025-02-12"
+categories: [quarto, dotfiles]
+jupyter: python3
+---
+
+## Executing code with quarto
+
+Quarto makes it easy to include executable code within documents. For example:
+
+Including
+````md
+```python
+for i in range(5):
+    print(i)
+```
+````
+
+Produces:
+
+```{python}
+for i in range(5):
+    print(i)
+```
+
+---
+
+The output of the code is executed and included in the document.
+
+See the [Quarto documentation](https://quarto.org/docs/computations/python.html) for more examples.
+
+For example, including figures is a really nice feature.
+
+### Matplotlib
+
+```{python}
+#| label: fig-example
+#| fig-cap: "A caption can even be included"
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+x = np.linspace(0, 10, 100)
+y = np.sin(x)
+
+plt.plot(x, y)
+plt.xlabel('x')
+plt.ylabel('sin(x)')
+plt.title('A simple plot')
+plt.show()
+```
+
+### Plotly
+
+And it work with plotly too!
+
+```{python}
+#| label: fig-plotly
+#| fig-cap: "Using plotly instead of matplotlib"
+
+import plotly.express as px
+
+df = px.data.iris()
+fig = px.scatter(df, x="sepal_width", y="sepal_length", 
+                 color="species", 
+                 marginal_y="violin", marginal_x="box", 
+                 trendline="ols", template="simple_white")
+fig.show()
+```
+
+
