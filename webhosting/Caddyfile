@@ -3,10 +3,10 @@
 
 # Any global config could go here
 
-{
-    # Use the staging letencrypt server instead
-    acme_ca https://acme-staging-v02.api.letsencrypt.org/directory
-}
+# {
+#     # Use the staging letencrypt server instead
+#     acme_ca https://acme-staging-v02.api.letsencrypt.org/directory
+# }
 
 # Import all additional configs from sites-enabled
 import sites-enabled/*.caddy
