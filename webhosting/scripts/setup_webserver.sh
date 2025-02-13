@@ -40,7 +40,8 @@ sudo ufw allow https
 sudo mkdir -p /srv/www
 
 # Start Caddy using docker-compose
-docker compose -f caddy-compose.yaml up -d
+ln -s caddy-compose.yaml compose.yaml
+docker compose up -d
 
 # Create scripts directory (separately send the webserver-update-static-files.sh script)
 mkdir -p ~/scripts

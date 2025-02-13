@@ -47,11 +47,15 @@ tasks:
     requires:
       vars: [DROPLET_NAME, SITE_NAME]
     vars:
+      DROPLET_NAME: '{{default "webserver" .DROPLET_NAME}}'
       STATIC_DIR: '{{default "static" .STATIC_DIR}}'
-      _FULL_DIR: "{{.USER_WORKING_DIR}}/{{.STATIC_DIR}}/"
+      ROOT_DIR: "{{default .USER_WORKING_DIR .ROOT_DIR}}"
+      _FULL_DIR: "{{.ROOT_DIR}}/{{.STATIC_DIR}}/"
     preconditions:
-      - sh: test -d "{{.USER_WORKING_DIR}}/{{.STATIC_DIR}}"
-        msg: "Directory {{.USER_WORKING_DIR}}/{{.STATIC_DIR}} does not exist (maybe need to set the STATIC_DIR variable?)"
+      - sh: test -d "{{._FULL_DIR}}"
+        msg: |
+          Directory "{{._FULL_DIR}}" does not exist (maybe need to change the STATIC_DIR variable? 
+          (or run from different dir or explicitly set ROOT_DIR))
     cmds:
       - |
         echo "Deploying static files from {{._FULL_DIR}} to droplet {{.DROPLET_NAME}}:srv/www/{{.SITE_NAME}}"
@@ -68,7 +72,8 @@ tasks:
     cmds:
       - scripts/send-webserver-config.sh "{{.DROPLET_NAME}}"
       - ssh {{.DROPLET_NAME}} < scripts/webserver-update-static-files.sh
-      # Do a quick caddy reload (sufficient for minor changes)
+      # Do a quick caddy reload (sufficient for minor changes) (or start if no services running)
+      # NOTE: May require logging into container repos first via `echo $GH_PAT | docker login -u <username> ghcr.io --password-stdin`
       - ssh {{.DROPLET_NAME}} "docker exec caddy_server caddy reload --config /etc/caddy/Caddyfile || docker compose -f caddy-compose.yaml up -d"
       - task: _caddy_restart_compose_if_changed
         vars:

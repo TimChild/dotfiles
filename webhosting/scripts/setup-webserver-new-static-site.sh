@@ -19,17 +19,19 @@ function warning() {
 
 set -e
 
-site_name=$1
+droplet_name=$1
+site_name=$2
 
-if [ -z "$site_name" ]; then
-    echo "Usage: webserver-init-new-static-site.sh <site_name> <caddy_config_path>"
+
+if [ -z "$droplet_name" ] || [ -z "$site_name" ]; then
+    echo "Usage: webserver-init-new-static-site.sh <droplet_name> <site_name>"
     exit 1
 fi
 
-heading "Initializing new static site ($site_name)"
+heading "Initializing new static site ($site_name) on ($droplet_name)"
 
 # Check that the site does not already exist on the webserver
-if [ ssh $droplet_name "[ -d /srv/www/$site_name ]" ]; then
+if ssh $droplet_name "[ -d /srv/www/$site_name ]"; then
     warning "Site $site_name already exists on the webserver"
     exit 1
 fi
@@ -37,7 +39,7 @@ fi
 echo "Creating directories on the webserver..."
 # Create directories on the webserver
 ssh $droplet_name "rm -rf ~/sites/$site_name && mkdir -p ~/sites/$site_name/static"
-ssh $droplet_name "mkdir -p /srv/www/$site_name"
+ssh $droplet_name "sudo mkdir -p /srv/www/$site_name"
 
 heading "Static site initialized successfully"
 echo "Note that site won't be visible until deploy task is run"
