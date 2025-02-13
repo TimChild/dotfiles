@@ -1,5 +1,7 @@
+# For local testing only
+
 http://localhost {
-	redir https://{host}{uri}:8443
+	redir https://{host}{uri}
 }
 
 localhost {
