@@ -1,0 +1,6 @@
+dotfiles.adventuresoftim.com {
+	encode gzip
+
+	root * /srv/www/quarto-dotfiles
+	file_server
+}
