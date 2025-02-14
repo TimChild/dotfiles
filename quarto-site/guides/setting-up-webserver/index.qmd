@@ -2,7 +2,6 @@
 title: "Setting up a webserver"
 date: "2025-02-13"
 categories: [webserver]
-# code-bg: "black"
 ---
 
 ## Setting up a new webserver
@@ -173,5 +172,54 @@ This does a few things:
 - Creates some required directories
 - Copies scripts to the server that are useful to call from automated workflows (e.g. a GitHub Actions deploy workflow in a site repository.)
 
+::: {.aside}
+Add `webserver` as an additional alias to the `~/.ssh/config` entry to allow using the default `SSH_NAME` in the tasks.
 
+This makes it easier to switch to a new server without having to modify any tasks (just move the `webserver` alias).
+:::
+
+### *Optional* -- Copy state of existing webserver
+
+This is only useful if migrating a webserver to a new vps for example.
+
+If you already have sites set up and running on a server, but are in the process of creating a new server, most things will already have been set up on the new server just by following the steps above (all config files etc. will have been copied over). But some site specific data, like `.env` files, may be missing.
+
+Rather than running the deploy tasks for each site, copying the current state of the running server should only require copying the `~/sites/` directory from the old server to the new server.
+
+The `~/sites/` directory contains all the data for each site, including `.env` files for example. A typical sites dir might look like this:
+
+```default
+sites/
+├── site1
+│   ├── .env
+│   └── static
+│       ├── ...
+│       └── index.html
+└── site2
+    ├── .env
+    └── static
+        ├── ...
+        └── index.html
+``` 
+
+This can be copied from one server to another with `rsync`:
+
+```bash
+rsync -avz webserver1:sites/ /tmp/sites
+rsync -avz /tmp/sites webserver2:sites
+rm -rf /tmp/sites
+```
+
+Then just restart the compose services:
+
+```bash
+ssh webserver2 "docker compose down && docker compose up -d"
+```
+
+## Summary
+
+The webserver is set up and ready to host sites. See the guides below for adding different types of sites:
+
+- [Static Site](../adding-a-static-site/index.qmd)
+- [Site with a backend](../adding-a-site-with-backend/index.qmd)
 

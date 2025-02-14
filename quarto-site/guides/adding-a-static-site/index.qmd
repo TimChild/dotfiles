@@ -1,0 +1,94 @@
+---
+title: "Adding a static site"
+date: "2025-02-15"
+categories: [webserver]
+---
+
+## Overview
+
+This guide covers adding a new static site to a webserver. It assumes the webserver is already set up as per the [webserver setup guide](../setting-up-webserver/index.qmd).
+
+## Adding a new site
+
+Now the basics of the webserver are set up, let's add a new site.
+
+### Initializing a new site
+
+```bash
+task new-static-site SITE_NAME="new-site" DOMAIN="new-site.com"
+```
+
+This will:
+
+- create a new directory in `~/sites/` for the new site
+- create a new `.caddy` config file in the `sites-enabled` directory (locally, and on the server)
+
+### Deploying a new site
+
+Now we just need to send some static files to the server for it to server them.
+
+For this, generally we'll be working in the repository for the site that should be deployed.
+
+In order to have access to the `task` commands from the webserver repository, it's helpful to have a global Taskfile set up.
+
+Create a `~/Taskfile.yml` with the following content:
+```yaml
+version: "3"
+
+includes:
+  web:
+    taskfile: ~/path/to/webserver/Taskfile.yml
+    optional: true
+    dir: ~/path/to/webserver/
+```
+
+This will give access to the tasks from anywhere via `task -g web:...`. (`-g` for global, and `web:` is the prefix added because it is an included taskfile).
+
+Now, from the respository that has a static site.
+
+```bash
+task web:deploy-static SITE_NAME="new-site" STATIC_DIR="path/to/static/files"
+```
+
+Where the `STATIC_DIR` will typically be something like `static` or `_site` etc. depending on the site generator.
+
+::: {.callout-note}
+You can also run from anywhere and specify the `ROOT_DIR` as well. E.g. from the webserver repository:
+
+```bash
+task deploy-static SITE_NAME="new-site" STATIC_DIR="path/to/static/files" ROOT_DIR="path/to/repo"
+```
+:::
+
+This will copy the files to the server, run a script on the server to move the files to the `/srv/www` directory, and then restart the caddy server.
+
+## Updating a site
+
+To update the site, just run the same `deploy-static` task again.
+
+This process can be made even easier by adding a task in the sites repository Taskfile.
+
+```yaml
+  deploy:
+    desc: "Deploy the static site"
+    cmds:
+      - quarto render  # Or whatever command is needed to build the site
+      - task: :web:deploy-static  # Leading colon specifies running a global task
+        vars:
+          STATIC_DIR: _site
+          SITE_NAME: quarto-dotfiles
+          ROOT_DIR: "{{.TASKFILE_DIR}}" # Ensures the root dir is always right even if task is called from a subdirectory
+```
+
+
+## Adding a site with a backend service
+
+If the site has a backend service, the process is similar but has a couple of additional steps.
+
+I'll give the example of a [Reflex](https://reflex.dev) site. This is a pure python framework that facilitates creating performant Next.js websites with a python backend and websocket communication.
+
+### Initializing a new site
+
+TODO: 
+- create a task for creating a reflex site (also needs to add a service to the docker-compose file).
+

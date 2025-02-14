@@ -1,0 +1,21 @@
+---
+title: "Adding a site with a backend"
+date: "2025-02-15"
+categories: [webserver]
+---
+
+## Overview
+
+This guide covers adding a site that also runs a backend service to the webserver. It assumes you have set up the webserver following the [webserver setup guide](../setting-up-webserver/index.qmd).
+
+The process is very similar to that of [adding a static site](../adding-a-static-site/index.qmd), but with a few additional steps to set up the backend service.
+
+## Adding a site with a backend service
+
+I'll give the example of a [Reflex](https://reflex.dev) site. This is a pure python framework that facilitates creating performant Next.js websites with a python backend and websocket communication.
+
+### Initializing a new site
+
+TODO: 
+- create a task for creating a reflex site (also needs to add a service to the docker-compose file).
+
