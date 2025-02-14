@@ -1,4 +1,5 @@
 #!/bin/bash
+# Run this script on the server to set up docker and docker-compose (following the DO guide below)
 # https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-22-04
 
 set -e
@@ -35,8 +36,6 @@ sudo docker version
 # Add user to docker group
 heading "Adding user to docker group (to run docker without sudo)"
 sudo usermod -aG docker "${USER}"
-# newgrp docker  # may not work in scripts 
-# su - "${USER}"  # may not work in scripts
 
 heading "Installing Docker Compose"
 sudo apt-get update -y
