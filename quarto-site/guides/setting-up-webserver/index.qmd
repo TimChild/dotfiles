@@ -1,0 +1,177 @@
+---
+title: "Setting up a webserver"
+date: "2025-02-13"
+categories: [webserver]
+# code-bg: "black"
+---
+
+## Setting up a new webserver
+
+This is a guide to setting up a new webserver based on the template found here [website-template](https://github.com/TimChild/webserver-template).
+
+The general idea is that the cloned repository will be used to manage a webserver on a remote vps (without being cloned to the vps). 
+
+The repository includes scripts and [Taskfile](https://taskfile.dev) tasks to set up and manage the webserver, but the webserver itself never needs the repository cloned to it.
+
+Additionally, the sites that are hosted on the webserver will generally be their own repositories. This repo provides tasks and examples that can be used in those other repositories to set up easy or automated deployment.
+
+There are many ways to achieve many of these steps. I will give examples of what I use, the same outcomes can be achieved many ways.
+
+## Clone repository
+
+First, create a new repository from the template. 
+
+Using the `GitHub CLI` to create a new repository based on the template.
+
+```bash
+gh repo create --template TimChild/webserver-template webserver-personal
+```
+
+::: {.callout-note collapse="true"}
+### Pulling changes from the template repository
+
+When you create a new repository from a template, it is a one-time operation.
+This creates an entirely separate repository from the template repository. If you would like to be able to pull updates from the template repository, you can add it as a remote.
+
+```bash
+git remote add template git@github.com:TimChild/webserver-template.git
+```
+
+This adds the template repository as a remote called `template`. You can then pull changes from the template repository as needed. This will allow you merge changes from the template repository into your own repository.
+
+```bash
+git pull --rebase template main
+```
+
+By using `--rebase` the local changes will be applied on top of the changes from the template repository.
+
+If there are conflicts, the rebase will pause and the conflicts will need to be resolved manually.
+:::
+
+
+### Tasks and scripts
+
+The main things to note initially are:
+
+- `Taskfile` -- This is a modern alternative to `Makefile` written in `go`, and designed for more general purpose automation (much like a typical `Makefile` often gets used for even though it was originally for compiling code).
+- `scripts/` -- This directory contains many scripts. Some are called locally by `tasks` and run on your llocal machine, others are intended to run on the remote server that will act as the webserver. In general, these are intended to be run via `task` commands, but it is helpful to be aware of them to understand what is happening.
+
+Use `task -l` to see a list of available tasks.
+
+## Initial setup of VPS
+
+Now let's create a new virtual private server (VPS) that will become our webserver.
+
+I use [DigitalOcean](https://www.digitalocean.com) for this, but there are many other options. The tasks and scripts here are written with DigitalOcean in mind, but should only require minimal adaptation for other providers.
+
+DigitalOcean uses the term `droplet` to refer to their VPSs. I will use this terminology here.
+
+### Creating a droplet
+
+We'll start using tasks to achieve most things from here on.
+
+```bash
+task droplet:create-new DROPLET_NAME="webserver2"
+```
+
+Several other arguments can be passed to this task such as `size`, `image`, etc. (look in the `taskfile-droplet.yml` file to see them all).
+
+These values will be validated against the DigitalOcean API, so if you pass an invalid value, the task will fail and tell you what you did wrong.
+
+Defaults are set to create a small droplet.
+
+::: {.callout-note}
+You might want to set some default values for `SSH_KEY_NAME` and `PROJECT` in the `taskfile-droplet.yml` file.
+E.g.
+
+```yaml
+    vars:
+      ...
+      SSH_KEY_NAME: '{{default "tim-linux" .SSH_KEY_NAME}}'
+      PROJECT: '{{default "Personal" .PROJECT}}'
+```
+:::
+
+This will actually run a series of scripts/tasks sequentially.
+
+```{mermaid}
+flowchart LR;
+    A([create-new]) --> B[bash scripts/create-droplet.sh]
+    A --> C([setup-new])
+    C --> D[doctl compute ssh & scripts/setup-droplet-security.sh]
+    C --> E[scripts/update-ssh-config.sh]
+    C --> F([setup-config])
+    C --> G([setup-docker])
+    F --> H[[ssh < scripts/setup-droplet-config.sh]]
+    G --> I[[ssh < scripts/setup-docker.sh]]
+
+    classDef task fill:#ffccff,stroke:#333,stroke-width:2px,color:#333;
+    classDef script fill:#ccccff,stroke:#333,stroke-width:2px,color:#333;
+    classDef remote_script fill:#ccffcc,stroke:#333,stroke-width:2px,color:#333;
+
+    class A,C,F,G task;
+    class B,D,E script;
+    class H,I remote_script;
+
+    subgraph key
+        K1(["Task"])
+        K2["Local Script"]
+        K3[["Remote Script"]]
+    end
+
+    class K1 task;
+    class K2 script;
+    class K3 remote_script;
+```
+
+::: {.callout-warning collapse="true"}
+## If task fails...
+If the task fails, it's possible that the droplet just wasn't fully booted up yet.
+
+Check if the droplet was created with `doctl compute droplet list`.
+
+If so, run the setup task manually with `task droplet:setup-new DROPLET_NAME="webserver2"`
+:::
+
+::: {.callout-note}
+This will also update your `~/.ssh/config` file to append an entry for the new droplet under the same name.
+
+From this point on, the `SSH_NAME` will be referred to instead of the `DROPLET_NAME`. 
+:::
+
+A `webadmin` user (with sudo privilidges) has been created on the droplet, and that is the user we will connect to from now on.
+
+You should now be able to run `ssh webserver2` to connect to the vps.
+
+
+::: {.aside}
+### Additional SSH Config
+
+Adding this to your `~/.ssh/config` file can speed up sequential ssh connections by reusing connections:
+```bash
+# Enable ssh multiplexing (faster sequential connections)
+Host *
+  ControlMaster auto
+  ControlPath ~/.ssh/sockets/%r@%h-%p  # Note: .ssh/sockets dir must exist
+  ControlPersist 10  # seconds
+```
+:::
+
+
+
+### Setting up the webserver
+
+I do the webserver part of the setup separately since the droplet creating can be useful for other things.
+
+```bash
+task droplet:setup-webserver SSH_NAME="webserver2"
+```
+
+This does a few things:
+
+- Sends configuration files (these will be updated later as well).
+- Creates some required directories
+- Copies scripts to the server that are useful to call from automated workflows (e.g. a GitHub Actions deploy workflow in a site repository.)
+
+
+
