@@ -119,6 +119,9 @@ sudo pipx ensurepath --global
 pipx install ggshield
 ggshield auth login
 
+# Setup uv (an alternative to pyenv + poetry)
+pipx install uv
+
 # Setup poetry
 pipx install poetry
 mkdir "$ZSH_CUSTOM/plugins/poetry"
