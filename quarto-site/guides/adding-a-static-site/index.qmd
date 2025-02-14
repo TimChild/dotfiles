@@ -53,10 +53,10 @@ task web:deploy-static SITE_NAME="new-site" STATIC_DIR="path/to/static/files"
 Where the `STATIC_DIR` will typically be something like `static` or `_site` etc. depending on the site generator.
 
 ::: {.callout-note}
-You can also run from anywhere and specify the `ROOT_DIR` as well. E.g. from the webserver repository:
+You can also run from anywhere and specify the `PROJECT_DIR` as well. E.g. from the webserver repository:
 
 ```bash
-task deploy-static SITE_NAME="new-site" STATIC_DIR="path/to/static/files" ROOT_DIR="path/to/repo"
+task deploy-static SITE_NAME="new-site" STATIC_DIR="path/to/static/files" PROJECT_DIR="path/to/repo"
 ```
 :::
 
@@ -77,18 +77,24 @@ This process can be made even easier by adding a task in the sites repository Ta
         vars:
           STATIC_DIR: _site
           SITE_NAME: quarto-dotfiles
-          ROOT_DIR: "{{.TASKFILE_DIR}}" # Ensures the root dir is always right even if task is called from a subdirectory
+          PROJECT_DIR: "{{.TASKFILE_DIR}}" # Ensures the root dir is always right even if task is called from a subdirectory
 ```
 
+## Updating automatically via GitHub Actions
 
-## Adding a site with a backend service
+Generally, it's better to set up an automated workflow for things like deployment.
 
-If the site has a backend service, the process is similar but has a couple of additional steps.
+There is a template github actions workflow `other-templates/github-workflows/deploy-static-site.template.yml` that can be copied to the `.github/workflows` directory in the of the site that should automatically deploy to the webserver.
 
-I'll give the example of a [Reflex](https://reflex.dev) site. This is a pure python framework that facilitates creating performant Next.js websites with a python backend and websocket communication.
+A `production` environment will need to be set up for that GitHub repository.
 
-### Initializing a new site
+The required secrets for the template workflow are shown below, although these will likely need to be tailored to the specific project:
 
-TODO: 
-- create a task for creating a reflex site (also needs to add a service to the docker-compose file).
+- **Secrets**:
+  - `SSH_PRIVATE_KEY` -- A private ssh key that grants access to the webserver (obtained via the `task -g web:add-ssh-key` command)
+  - `GITHUB_TOKEN` -- This is set automatically by GitHub (**do not set this manually**)
+- **Vars**:
+  - `DROPLET_IP` -- The IP address of the webserver (since the GHA runner wont have the ssh alias set up)
+  - `SITE_NAME` -- The name of the site on the webserver (same as the `SITE_NAME` used in other tasks)
+  - `DOMAIN` -- The domain of the site (required in .env file for reflex backend)
 
