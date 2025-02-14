@@ -9,9 +9,9 @@ includes:
   # NOTE: Tasks will default to running in the home directory (or wherever this taskfile is executed from) if no `dir` is specified
 
   web:
-    taskfile: ~/dotfiles/webhosting/Taskfile.yml
+    taskfile: ~/github/webserver-template/Taskfile.yml
     optional: true
-    dir: ~/dotfiles/webhosting
+    dir: ~/github/webserver-template
 
   general:
     taskfile: ~/dotfiles/taskfile_general.yml
