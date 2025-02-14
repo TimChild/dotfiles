@@ -2,7 +2,6 @@
 title: "Posts that include executable code"
 date: "2025-02-12"
 categories: [quarto, dotfiles]
-jupyter: python3
 ---
 
 ## Executing code with quarto
