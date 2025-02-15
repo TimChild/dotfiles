@@ -3,22 +3,9 @@
 version: "3"
 
 vars:
-  GREETING: Hello, World!
   PLEX_DATA_PATH: /mnt/g/1Video/
 
-# includes:
-#   web:
-#     taskfile: webhosting/Taskfile.yml
-#     optional: true
-#     dir: webhosting
-
 tasks:
-  hello:
-    cmds:
-      - echo "{{.GREETING}}"
-      - echo "Taskfile default dir is {{.TASK_DIR}}"
-    silent: true
-
   init_secondary_drives:
     desc: "Initialize secondary drives (only needs to be done once)"
     cmds:
@@ -32,14 +19,3 @@ tasks:
     cmds:
       - echo "{{.PLEX_DATA_PATH}}"
       - scripts/setup_plex_local.sh
-
-  quarto:deploy-dotfiles:
-    desc: "Deploy the dotfiles quarto site"
-    dir: quarto-site
-    cmds:
-      - quarto render
-      - task: web:deploy-static
-        vars:
-          STATIC_DIR: _site
-          SITE_NAME: quarto-dotfiles
-          ROOT_DIR: "{{.TASKFILE_DIR}}/quarto-site"
