@@ -1,7 +1,0 @@
-# Can't use `localhost` on linux because port `:80` not allowed to be used
-
-:9001 {
-	root * /path/to/static/files
-	file_server
-}
-
