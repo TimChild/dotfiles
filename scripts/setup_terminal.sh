@@ -63,7 +63,7 @@ sudo apt-get update
 # For clipboard support in tmux (could also use xclip)
 sudo apt-get install -y xsel
 # Other tools that are useful
-sudo apt-get install -y gcc ripgrep fd-find make curl unzip libfuse2 htop lm-sensors tree entr
+sudo apt-get install -y gcc ripgrep fd-find make curl unzip libfuse2 htop lm-sensors tree entr bzip2
 # fd-find (fd) is a faster alternative to find (used by treesitter) -- needs link setup to use via fd
 sudo ln -s $(which fdfind) ~/.local/bin/fd
 
@@ -216,6 +216,28 @@ echo 'deb http://download.opensuse.org/repositories/home:/jstaf/xUbuntu_23.10/ /
 curl -fsSL https://download.opensuse.org/repositories/home:jstaf/xUbuntu_23.10/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/home_jstaf.gpg > /dev/null
 sudo apt update
 sudo apt install onedriver
+
+# Install zen browser
+# https://github.com/zen-browser/desktop/releases/latest/download/zen.linux-x86_64.tar.bz2
+wget -qO- https://github.com/zen-browser/desktop/releases/latest/download/zen.linux-x86_64.tar.xz | sudo tar xJ -C /opt
+sudo ln -s /opt/zen/zen /usr/local/bin/zen
+sudo mkdir -p /usr/local/share/applications
+sudo tee /usr/local/share/applications/zen.desktop > /dev/null << EOF
+[Desktop Entry]
+Version=1.0
+Name=Zen Browser
+Comment=Experience tranquillity while browsing the web without people tracking you!
+GenericName=Web Browser
+Keywords=Internet;WWW;Browser;Web;Explorer
+Exec=zen
+Terminal=false
+X-MultipleArgs=false
+Type=Application
+Icon=/opt/zen/browser/chrome/icons/default/default128.png
+Categories=GNOME;GTK;Network;WebBrowser;
+MimeType=text/html;text/xml;application/xhtml+xml;application/xml;application/rss+xml;application/rdf+xml;image/gif;image/jpeg;image/png;x-scheme-handler/http;x-scheme-handler/https;x-scheme-handler/ftp;x-scheme-handler/chrome;video/webm;application/x-xpinstall;
+StartupNotify=true
+EOF
 
 # Echo the contents of manual-steps.txt to terminal
 cat ~/dotfiles/scripts/manual-steps.txt
