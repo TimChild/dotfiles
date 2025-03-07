@@ -25,9 +25,12 @@ def convert_images_to_webp(directory: str = "."):
     # Iterate over all files in the given directory
     for filepath in directory_path.iterdir():
         if filepath.is_dir():
+            print("Skipping directory", filepath.name)
             continue
         if filepath.suffix in SKIP_EXTENSIONS:
+            print("Skipping file with extension:", filepath.name)
             continue
+        print("Processing:", filepath.name)
 
         try:
             # Open an image file
