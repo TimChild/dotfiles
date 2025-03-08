@@ -120,7 +120,8 @@ pipx install ggshield
 ggshield auth login
 
 # Setup uv (an alternative to pyenv + poetry)
-pipx install uv
+curl -LsSf https://astral.sh/uv/install.sh | sh
+# pipx install uv
 
 # Setup poetry
 pipx install poetry
