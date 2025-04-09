@@ -37,6 +37,11 @@ def convert_images_to_webp(
         try:
             # Open an image file
             with Image.open(filepath) as img:
+                # If it's already small enough, skip it
+                if img.width <= max_width and img.height <= max_height:
+                    print(f"Skipping {filepath.name}, already small enough")
+                    continue
+
                 # Copy the original file to 'originals' directory
                 original_filename = originals_dir / filepath.name
                 filepath.rename(original_filename)
