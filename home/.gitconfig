@@ -1,6 +1,7 @@
 [user]
 	email = timjchild@gmail.com
 	name = Tim Child
+	signingkey = 5CFD63FA8AFDD695567224CE867476C8C369AADB
 [init]
 	defaultBranch = main
 [core]
@@ -12,3 +13,5 @@
 	required = true
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
+[tag]
+	gpgSign = true
