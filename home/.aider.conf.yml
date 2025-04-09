@@ -18,7 +18,8 @@
 # Main model:
 
 ## Specify the model to use for the main chat
-model: o1
+# model: o1
+model: gpt-4o
 
 ########################
 # API Keys and settings:
@@ -389,7 +390,7 @@ completion-menu-bg-color: "#111111"
 #config: xxx
 
 ## Specify the .env file to load (default: .env in git root)
-env-file: ~/.aider.env
+env-file: /home/tim/.aider.env
 ## Enable/disable suggesting shell commands (default: True)
 #suggest-shell-commands: true
 
