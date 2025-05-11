@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -e
+
+# Detect if ansible is installed
+if ! command -v ansible-playbook >/dev/null 2>&1; then
+    echo "Ansible not found. Installing..."
+    # Detect OS
+    if [ -f /etc/arch-release ]; then
+        sudo pacman -Sy --noconfirm ansible
+    elif [ -f /etc/debian_version ]; then
+        sudo apt update && sudo apt install -y ansible
+    else
+        echo "Unsupported OS. Please install Ansible manually."
+        exit 1
+    fi
+fi
+
+echo "Running Ansible playbook..."
+ansible-playbook ~/dotfiles/ansible/playbooks/setup_dev_system.yml "$@" 
