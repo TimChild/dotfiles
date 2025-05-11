@@ -1,0 +1,36 @@
+---
+- name: Update package cache (Debian)
+  block:
+    - name: Update package cache
+      shell: "{{ package_update_command }}"
+    - name: Install distribution-specific packages
+      package:
+        name: "{{ debian_packages }}"
+        state: present
+  when: ansible_os_family == 'Debian'
+
+- name: Update package cache (Arch)
+  block:
+    - name: Update package cache
+      shell: "{{ package_update_command }}"
+    - name: Install distribution-specific packages
+      package:
+        name: "{{ arch_packages }}"
+        state: present
+  when: ansible_os_family == 'Archlinux'
+
+- name: Install common packages
+  package:
+    name: "{{ common_packages }}"
+    state: present
+
+- name: Create .ssh/sockets directory
+  file:
+    path: "{{ ansible_env.HOME }}/.ssh/sockets"
+    state: directory
+    mode: '0700'
+
+- name: Install fonts
+  package:
+    name: "{{ fonts }}"
+    state: present 

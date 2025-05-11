@@ -1,0 +1,24 @@
+---
+# Arch-specific variables
+package_manager: pacman
+package_update_command: pacman -Syu --noconfirm
+package_install_command: pacman -S --noconfirm
+package_remove_command: pacman -R --noconfirm
+
+# Arch-specific packages
+arch_packages:
+  - xsel
+  - fuse2
+  - base-devel
+  - openssl
+  - zlib
+  - bzip2
+  - readline
+  - sqlite
+  - ncurses
+  - xz
+  - tk
+  - libxml2
+  - libxmlsec1
+  - libffi
+  - xz 

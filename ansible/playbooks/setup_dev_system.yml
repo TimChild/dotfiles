@@ -1,0 +1,11 @@
+---
+- name: Setup Development System
+  hosts: localhost
+  become: true
+  roles:
+    - common
+    - terminal
+    - docker
+    - go
+    - firewall
+    - dev_tools

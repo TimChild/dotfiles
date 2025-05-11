@@ -1,0 +1,30 @@
+---
+# Common variables for all distributions
+common_packages:
+  - git
+  - curl
+  - wget
+  - htop
+  - ripgrep
+  - fd
+  - make
+  - gcc
+  - unzip
+  - bzip2
+  - tree
+  - entr
+  - lm-sensors
+
+# Fonts
+fonts:
+  - fonts-jetbrains-mono
+  - fonts-noto
+  - fonts-noto-color-emoji
+
+# Development tools
+dev_tools:
+  - task
+  - lazydocker
+  - lazygit
+  - doctl
+  - onedriver 

@@ -1,0 +1,45 @@
+---
+- name: Install dev tools
+  package:
+    name: "{{ dev_tools }}"
+    state: present
+
+- name: Install pipx
+  package:
+    name: pipx
+    state: present
+
+- name: Ensure pipx is in PATH
+  shell: pipx ensurepath
+  args:
+    executable: /bin/bash
+
+- name: Install global pipx
+  shell: sudo pipx ensurepath --global
+  args:
+    executable: /bin/bash
+
+- name: Install GitGuardian
+  shell: pipx install ggshield
+  args:
+    executable: /bin/bash
+
+- name: Install uv
+  shell: curl -LsSf https://astral.sh/uv/install.sh | sh
+  args:
+    executable: /bin/bash
+
+- name: Install nvm
+  shell: wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+  args:
+    executable: /bin/bash
+
+- name: Install Node.js
+  shell: source ~/.zshrc && nvm install node
+  args:
+    executable: /bin/bash
+
+- name: Install tldr
+  shell: npm install -g tldr
+  args:
+    executable: /bin/bash 

@@ -1,0 +1,31 @@
+---
+- name: Install Alacritty
+  package:
+    name: alacritty
+    state: present
+
+- name: Install ZSH
+  package:
+    name: zsh
+    state: present
+
+- name: Install Oh My Zsh
+  shell: sh -c "$(wget -qO- https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" -- --keep-zshrc --unattended
+  args:
+    creates: "{{ ansible_env.HOME }}/.oh-my-zsh"
+
+- name: Create Oh My Zsh custom directory
+  file:
+    path: "{{ ansible_env.HOME }}/.oh-my-zsh/custom"
+    state: directory
+
+- name: Link Oh My Zsh custom config
+  file:
+    src: "{{ playbook_dir }}/../config/oh-my-zsh-custom"
+    dest: "{{ ansible_env.HOME }}/.oh-my-zsh/custom"
+    state: link
+
+- name: Set ZSH as default shell
+  shell: chsh -s $(which zsh)
+  args:
+    executable: /bin/bash 
