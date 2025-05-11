@@ -16,4 +16,4 @@ if ! command -v ansible-playbook >/dev/null 2>&1; then
 fi
 
 echo "Running Ansible playbook..."
-ansible-playbook ~/dotfiles/ansible/playbooks/setup_dev_system.yml "$@" 
+ansible-playbook ~/dotfiles/ansible/setup_dev_system.yml "$@" 
