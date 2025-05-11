@@ -4,25 +4,53 @@
     name: alacritty
     state: present
 
-- name: Install ZSH
+- name: Install ZSH and plugins
   package:
-    name: zsh
+    name:
+      - zsh
+      - zsh-autosuggestions
+      - zsh-syntax-highlighting
     state: present
 
-- name: Install Oh My Zsh
-  shell: sh -c "$(wget -qO- https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" -- --keep-zshrc --unattended
-  args:
-    creates: "{{ ansible_env.HOME }}/.oh-my-zsh"
+- name: Configure Oh My Zsh using gantsign.oh-my-zsh
+  include_role:
+    name: gantsign.oh-my-zsh
+  vars:
+    users:
+      - username: "{{ ansible_env.USER | default(ansible_user_id) }}"
+        oh_my_zsh:
+          theme: robbyrussell
+          plugins:
+            - aws
+            - docker
+            - docker-compose
+            - doctl
+            - dotenv
+            - fzf
+            - gh
+            - git
+            - golang
+            - npm
+            - nvm
+            - vi-mode
+            - zsh-syntax-highlighting
+            - zsh-autosuggestions
+            - zsh-history-substring-search
+            - zsh-you-should-use
+          update_mode: reminder
+          update_frequency: 14
+          write_zshrc: true
 
-- name: Create Oh My Zsh custom directory
+- name: Link plugins.zsh file
   file:
-    path: "{{ ansible_env.HOME }}/.oh-my-zsh/custom"
-    state: directory
+    src: "{{ playbook_dir }}/../config/oh-my-zsh-custom/plugins.zsh"
+    dest: "{{ ansible_env.HOME }}/.oh-my-zsh/custom/plugins.zsh"
+    state: link
 
-- name: Link Oh My Zsh custom config
+- name: Link extra.zsh file
   file:
-    src: "{{ playbook_dir }}/../config/oh-my-zsh-custom"
-    dest: "{{ ansible_env.HOME }}/.oh-my-zsh/custom"
+    src: "{{ playbook_dir }}/../config/oh-my-zsh-custom/extra.zsh"
+    dest: "{{ ansible_env.HOME }}/.oh-my-zsh/custom/extra.zsh"
     state: link
 
 - name: Set ZSH as default shell
