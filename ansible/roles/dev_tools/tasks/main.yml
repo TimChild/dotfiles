@@ -4,6 +4,80 @@
     name: "{{ dev_tools }}"
     state: present
 
+- name: Install yay and dev tools (Arch)
+  block:
+    - name: Check if yay is installed
+      command: yay --version
+      register: yay_check
+      ignore_errors: true
+      changed_when: false
+    - name: Install yay from AUR if not present
+      block:
+        - name: Install base-devel and git (needed for yay build)
+          pacman:
+            name:
+              - base-devel
+              - git
+            state: present
+        - name: Clone yay AUR repo
+          git:
+            repo: https://aur.archlinux.org/yay.git
+            dest: /tmp/yay
+            clone: yes
+            update: no
+        - name: Build and install yay
+          shell: "cd /tmp/yay && makepkg -si --noconfirm"
+          args:
+            creates: /usr/bin/yay
+      when: yay_check.rc != 0
+    - name: Install lazygit (Arch)
+      pacman:
+        name: lazygit
+        state: present
+  when: ansible_os_family == 'Archlinux'
+
+- name: Install dev tools (Debian/Ubuntu)
+  block:
+    - name: Install lazygit (Debian)
+      block:
+        - name: Get latest lazygit version
+          uri:
+            url: https://api.github.com/repos/jesseduffield/lazygit/releases/latest
+            return_content: yes
+          register: lazygit_api
+        - name: Set lazygit version fact
+          set_fact:
+            lazygit_version: "{{ lazygit_api.json.tag_name }}"
+        - name: Download lazygit tarball
+          get_url:
+            url: "https://github.com/jesseduffield/lazygit/releases/download/{{ lazygit_version }}/lazygit_{{ lazygit_version | regex_replace('^v', '') }}_Linux_x86_64.tar.gz"
+            dest: /tmp/lazygit.tar.gz
+        - name: Extract lazygit binary
+          unarchive:
+            src: /tmp/lazygit.tar.gz
+            dest: /tmp/
+            remote_src: yes
+        - name: Install lazygit binary
+          copy:
+            src: /tmp/lazygit
+            dest: /usr/local/bin/lazygit
+            mode: '0755'
+        - name: Remove lazygit tarball and binary
+          file:
+            path: "/tmp/{{ item }}"
+            state: absent
+          loop:
+            - lazygit.tar.gz
+            - lazygit
+      when: ansible_os_family == 'Debian'
+  when: ansible_os_family == 'Debian'
+
+- name: Install lazydocker (Debian)
+  shell: curl https://raw.githubusercontent.com/jesseduffield/lazydocker/master/scripts/install_update_linux.sh | bash
+  args:
+    creates: /usr/local/bin/lazydocker
+
+# TODO: Transition to uvx instead?
 - name: Install pipx
   package:
     name: pipx
