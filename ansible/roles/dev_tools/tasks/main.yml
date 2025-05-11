@@ -53,10 +53,10 @@
         name: doctl
         state: present
         
-    - name: Install onedriver (Arch)
-      pacman:
-        name: onedriver
-        state: present
+    # - name: Install onedriver (Arch)
+    #   aur:
+    #     name: onedriver
+    #     state: present
 
   when: ansible_os_family == 'Archlinux'
 
