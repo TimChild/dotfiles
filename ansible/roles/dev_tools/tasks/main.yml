@@ -23,9 +23,13 @@
             force: yes
             version: master
             accept_hostkey: yes
-            # Ensure the user owns the directory
+          become: false
+        - name: Ensure yay directory is owned by user
+          file:
+            path: /tmp/yay
             owner: "{{ ansible_env.USER | default(ansible_user_id) }}"
             group: "{{ ansible_env.USER | default(ansible_user_id) }}"
+            recurse: yes
           become: false
         - name: Build and install yay
           shell: "cd /tmp/yay && makepkg -si --noconfirm"
