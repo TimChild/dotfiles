@@ -2,6 +2,10 @@
 - name: Setup Development System
   hosts: localhost
   become: true
+  pre_tasks:
+    - name: Group hosts by OS family
+      group_by:
+        key: "{{ ansible_os_family }}"
   roles:
     - common
     - terminal
