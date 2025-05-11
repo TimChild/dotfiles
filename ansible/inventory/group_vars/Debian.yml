@@ -7,17 +7,10 @@ package_remove_command: apt remove -y
 
 # Debian-specific packages
 debian_packages:
-  - libfuse2
-  - build-essential
-  - libssl-dev
-  - zlib1g-dev
-  - libbz2-dev
-  - libreadline-dev
-  - libsqlite3-dev
-  - libncursesw5-dev
-  - xz-utils
-  - tk-dev
-  - libxml2-dev
-  - libxmlsec1-dev
-  - libffi-dev
-  - liblzma-dev 
+  - libfuse2 # Required for file system mounting
+  - build-essential # Essential development tools
+  - libssl-dev # Cryptography library
+  - zlib1g-dev # Compression library
+  - libbz2-dev # Compression library
+  - libsqlite3-dev # SQLite database library
+  - libncursesw5-dev # Terminal handling library

@@ -7,11 +7,10 @@ package_remove_command: pacman -R --noconfirm
 
 # Arch-specific packages
 arch_packages:
-  - fuse2
-  - base-devel
-  - openssl
-  - zlib
-  - bzip2
-  - readline
-  - sqlite
-  - ncurses
+  - fuse2 # Required for file system mounting
+  - base-devel # Essential development tools
+  - openssl # Cryptography library
+  - zlib # Compression library
+  - sqlite # SQLite database library
+  - ncurses # Terminal handling library
+

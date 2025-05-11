@@ -13,14 +13,13 @@ common_packages:
   - bzip2
   - tree
   - entr
-  - lm-sensors
   - xsel
 
 # Fonts
 fonts:
   - fonts-jetbrains-mono
-  - fonts-noto
-  - fonts-noto-color-emoji
+  # - fonts-noto
+  # - fonts-noto-color-emoji
 
 # Development tools
 dev_tools:
@@ -28,4 +27,5 @@ dev_tools:
   - lazydocker
   - lazygit
   - doctl
-  - onedriver 
+  - onedriver
+
