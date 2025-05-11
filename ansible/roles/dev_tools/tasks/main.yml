@@ -57,6 +57,11 @@
     #   aur:
     #     name: onedriver
     #     state: present
+#
+    - name: Install pipx
+      package:
+        name: python-pipx
+        state: present
 
   when: ansible_os_family == 'Archlinux'
 
@@ -121,6 +126,11 @@
             name: onedriver
             state: present
             update_cache: yes
+
+        - name: Install pipx
+          package:
+            name: pipx
+            state: present
     
   when: ansible_os_family == 'Debian'
 
@@ -130,11 +140,6 @@
     creates: /usr/local/bin/lazydocker
 
 # TODO: Transition to uvx instead?
-- name: Install pipx
-  package:
-    name: pipx
-    state: present
-
 - name: Ensure pipx is in PATH
   shell: pipx ensurepath
   args:
