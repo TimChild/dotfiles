@@ -1,42 +1,43 @@
 ---
 - name: Install yay and dev tools (Arch)
   block:
-    - name: Check if yay is installed
-      command: yay --version
-      register: yay_check
-      ignore_errors: true
-      changed_when: false
-    - name: Install yay from AUR if not present
-      block:
-        - name: Install base-devel and git (needed for yay build)
-          pacman:
-            name:
-              - base-devel
-              - git
-            state: present
-        - name: Clone yay AUR repo
-          git:
-            repo: https://aur.archlinux.org/yay.git
-            dest: "{{ ansible_user_dir }}/yay"
-            clone: yes
-            update: no
-            force: yes
-            version: master
-            accept_hostkey: yes
-          become: false
-        - name: Ensure yay directory is owned by user
-          file:
-            path: "{{ ansible_user_dir }}/yay"
-            owner: "{{ ansible_env.USER | default(ansible_user_id) }}"
-            group: "{{ ansible_env.USER | default(ansible_user_id) }}"
-            recurse: yes
-          become: false
-        - name: Build and install yay
-          shell: "cd {{ ansible_user_dir }}/yay && makepkg -si --noconfirm"
-          args:
-            creates: /usr/bin/yay
-          become: false
-      when: yay_check.rc != 0
+    # - name: Check if yay is installed
+    #   command: yay --version
+    #   register: yay_check
+    #   ignore_errors: true
+    #   changed_when: false
+
+    # - name: Install yay from AUR if not present
+    #   block:
+    #     - name: Install base-devel and git (needed for yay build)
+    #       pacman:
+    #         name:
+    #           - base-devel
+    #           - git
+    #         state: present
+    #     - name: Clone yay AUR repo
+    #       git:
+    #         repo: https://aur.archlinux.org/yay.git
+    #         dest: "{{ ansible_user_dir }}/yay"
+    #         clone: yes
+    #         update: no
+    #         force: yes
+    #         version: master
+    #         accept_hostkey: yes
+    #       become: false
+    #     - name: Ensure yay directory is owned by user
+    #       file:
+    #         path: "{{ ansible_user_dir }}/yay"
+    #         owner: "{{ ansible_env.USER | default(ansible_user_id) }}"
+    #         group: "{{ ansible_env.USER | default(ansible_user_id) }}"
+    #         recurse: yes
+    #       become: false
+    #     - name: Build and install yay
+    #       shell: "cd {{ ansible_user_dir }}/yay && makepkg -si --noconfirm"
+    #       args:
+    #         creates: /usr/bin/yay
+    #       become: false
+    #   when: yay_check.rc != 0
     - name: Install lazygit (Arch)
       pacman:
         name: lazygit
