@@ -32,7 +32,7 @@
 
 - name: Install fonts
   package:
-    name: "{{ fonts }}"
+    name: "ttf-jetbrains-mono-nerd"
     state: present
 
 - name: Install JetBrains Mono Nerd Font (Arch)
