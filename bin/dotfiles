@@ -33,4 +33,4 @@ ansible-galaxy install -r requirements.yml
 cd -
 
 echo "Running Ansible playbook..."
-ansible-playbook ~/dotfiles/ansible/setup_dev_system.yml "$@" 
+ansible-playbook -i ~/dotfiles/ansible/inventory/hosts.yml ~/dotfiles/ansible/setup_dev_system.yml "$@" 
