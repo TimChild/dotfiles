@@ -172,7 +172,7 @@
     
 - name: Install npm
   package:
-    name: npm, nodejs
+    name: npm
     state: present
 
 - name: Install tldr
