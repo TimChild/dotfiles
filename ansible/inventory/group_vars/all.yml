@@ -14,6 +14,7 @@ common_packages:
   - tree
   - entr
   - lm-sensors
+  - xsel
 
 # Fonts
 fonts:

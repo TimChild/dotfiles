@@ -7,7 +7,6 @@ package_remove_command: pacman -R --noconfirm
 
 # Arch-specific packages
 arch_packages:
-  - xsel
   - fuse2
   - base-devel
   - openssl
@@ -16,9 +15,3 @@ arch_packages:
   - readline
   - sqlite
   - ncurses
-  - xz
-  - tk
-  - libxml2
-  - libxmlsec1
-  - libffi
-  - xz 

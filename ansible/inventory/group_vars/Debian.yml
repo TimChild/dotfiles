@@ -7,7 +7,6 @@ package_remove_command: apt remove -y
 
 # Debian-specific packages
 debian_packages:
-  - xsel
   - libfuse2
   - build-essential
   - libssl-dev
