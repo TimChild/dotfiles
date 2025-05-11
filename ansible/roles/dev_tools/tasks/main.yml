@@ -169,6 +169,11 @@
   shell: source ~/.zshrc && nvm install node
   args:
     executable: /bin/bash
+    
+- name: Install npm
+  package:
+    name: npm, nodejs
+    state: present
 
 - name: Install tldr
   shell: npm install -g tldr
