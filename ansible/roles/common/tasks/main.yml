@@ -33,4 +33,37 @@
 - name: Install fonts
   package:
     name: "{{ fonts }}"
-    state: present 
+    state: present
+
+- name: Install JetBrains Mono Nerd Font (Arch)
+  block:
+    - name: Install JetBrains Mono Nerd Font
+      pacman:
+        name: ttf-jetbrains-mono-nerd
+        state: present
+  when: ansible_os_family == 'Archlinux'
+
+- name: Install JetBrains Mono Nerd Font (Debian/Ubuntu)
+  block:
+    - name: Ensure fonts directory exists
+      file:
+        path: "{{ ansible_env.HOME }}/.fonts"
+        state: directory
+        mode: '0755'
+
+    - name: Check if JetBrains Mono Nerd Font is already installed
+      shell: "ls {{ ansible_env.HOME }}/.fonts/JetBrainsMono*Nerd*Font*Complete* || true"
+      register: jetbrains_font_exists
+      changed_when: false
+      failed_when: false
+
+    - name: Download and install JetBrains Mono Nerd Font if not present
+      when: jetbrains_font_exists.stdout == ""
+      block:
+        - name: Unzip JetBrains Mono Nerd Font directly from URL
+          unarchive:
+            src: https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/JetBrainsMono.zip
+            dest: "{{ ansible_env.HOME }}/.fonts"
+            remote_src: yes
+        - name: Refresh font cache
+          command: fc-cache -f -v 

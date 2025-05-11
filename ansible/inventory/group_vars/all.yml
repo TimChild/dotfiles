@@ -15,12 +15,6 @@ common_packages:
   - entr
   - xsel
 
-# Fonts
-fonts:
-  - fonts-jetbrains-mono
-  # - fonts-noto
-  # - fonts-noto-color-emoji
-
 # Development tools
 dev_tools:
   - task
