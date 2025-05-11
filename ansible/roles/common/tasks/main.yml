@@ -67,3 +67,4 @@
             remote_src: yes
         - name: Refresh font cache
           command: fc-cache -f -v 
+  when: ansible_os_family == 'Debian'
