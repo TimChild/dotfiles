@@ -1,5 +1,5 @@
 ---
-- name: Install dev tools (Arch)
+- name: Install yay and dev tools (Arch)
   block:
     - name: Check if yay is installed
       command: yay --version
@@ -20,10 +20,18 @@
             dest: /tmp/yay
             clone: yes
             update: no
+            force: yes
+            version: master
+            accept_hostkey: yes
+            # Ensure the user owns the directory
+            owner: "{{ ansible_env.USER | default(ansible_user_id) }}"
+            group: "{{ ansible_env.USER | default(ansible_user_id) }}"
+          become: false
         - name: Build and install yay
           shell: "cd /tmp/yay && makepkg -si --noconfirm"
           args:
             creates: /usr/bin/yay
+          become: false
       when: yay_check.rc != 0
     - name: Install lazygit (Arch)
       pacman:
