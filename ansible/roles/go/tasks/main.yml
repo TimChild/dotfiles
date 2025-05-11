@@ -1,48 +1,13 @@
 ---
-- name: Set Go version and download URL
-  set_fact:
-    go_version: "1.23.4"
-    go_tarball: "go{{ go_version }}.linux-amd64.tar.gz"
-    go_url: "https://go.dev/dl/go{{ go_version }}.linux-amd64.tar.gz"
-
-- name: Download Go tarball
-  get_url:
-    url: "{{ go_url }}"
-    dest: "/tmp/{{ go_tarball }}"
-    mode: '0644'
-
-- name: Remove any existing Go installation
-  become: true
-  file:
-    path: /usr/local/go
-    state: absent
-
-- name: Extract Go tarball to /usr/local
-  become: true
-  unarchive:
-    src: "/tmp/{{ go_tarball }}"
-    dest: /usr/local
-    remote_src: yes
-    creates: /usr/local/go/bin/go
-
-- name: Remove Go tarball
-  file:
-    path: "/tmp/{{ go_tarball }}"
-    state: absent
-
-- name: Ensure Go bin path is in ~/.zshrc
-  lineinfile:
-    path: "{{ ansible_env.HOME }}/.zshrc"
-    line: 'export PATH=$PATH:/usr/local/go/bin'
-    state: present
-
-- name: Ensure Go GOPATH bin is in ~/.zshrc
-  lineinfile:
-    path: "{{ ansible_env.HOME }}/.zshrc"
-    line: 'export PATH=$PATH:$(go env GOPATH)/bin'
-    state: present
+- name: Install Go using gantsign.golang
+  include_role:
+    name: gantsign.golang
+  vars:
+    golang_version: '1.23.4'
+    golang_gopath: "{{ ansible_env.HOME }}/go"
+    golang_install_dir: "/usr/local/go"
 
 - name: Install golint
   shell: "/usr/local/go/bin/go install golang.org/x/lint/golint@latest"
   args:
-    creates: "{{ ansible_env.HOME }}/go/bin/golint" 
+    creates: "{{ ansible_env.HOME }}/go/bin/golint"

@@ -15,5 +15,22 @@ if ! command -v ansible-playbook >/dev/null 2>&1; then
     fi
 fi
 
+# Ensure SSH key exists and is authorized for localhost
+if [ ! -f ~/.ssh/id_ed25519 ]; then
+    echo "Generating new SSH key..."
+    ssh-keygen -t ed25519 -N "" -f ~/.ssh/id_ed25519
+fi
+if ! grep -q "$(cat ~/.ssh/id_ed25519.pub)" ~/.ssh/authorized_keys 2>/dev/null; then
+    echo "Adding SSH public key to authorized_keys..."
+    mkdir -p ~/.ssh
+    cat ~/.ssh/id_ed25519.pub >> ~/.ssh/authorized_keys
+    chmod 600 ~/.ssh/authorized_keys
+fi
+
+# Install Ansible Galaxy requirements
+cd ~/dotfiles/ansible
+ansible-galaxy install -r requirements.yml
+cd -
+
 echo "Running Ansible playbook..."
 ansible-playbook ~/dotfiles/ansible/setup_dev_system.yml "$@" 
