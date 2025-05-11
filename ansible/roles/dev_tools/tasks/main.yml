@@ -1,10 +1,5 @@
 ---
-- name: Install dev tools
-  package:
-    name: "{{ dev_tools }}"
-    state: present
-
-- name: Install yay and dev tools (Arch)
+- name: Install dev tools (Arch)
   block:
     - name: Check if yay is installed
       command: yay --version
@@ -34,6 +29,22 @@
       pacman:
         name: lazygit
         state: present
+        
+    - name: Install Task (Arch)
+      pacman:
+        name: go-task
+        state: present
+        
+    - name: Install doctl (Arch)
+      pacman:
+        name: doctl
+        state: present
+        
+    - name: Install onedriver (Arch)
+      pacman:
+        name: onedriver
+        state: present
+
   when: ansible_os_family == 'Archlinux'
 
 - name: Install dev tools (Debian/Ubuntu)
@@ -69,10 +80,38 @@
           loop:
             - lazygit.tar.gz
             - lazygit
-      when: ansible_os_family == 'Debian'
+
+    - name: Install Task (Debian)
+      snap:
+        name: task
+        classic: true
+        state: present
+        
+    - name: Install doctl (Debian)
+      snap:
+        name: doctl
+        state: present
+
+    - name: Install onedriver (Debian)
+      block:
+        - name: Add onedriver repository
+          apt_repository:
+            repo: deb http://download.opensuse.org/repositories/home:/jstaf/xUbuntu_23.10/ /
+            key: https://download.opensuse.org/repositories/home:jstaf/xUbuntu_23.10/Release.key
+            state: present
+        - name: Install onedriver
+          apt:
+            name: onedriver
+            state: present
+        - name: Install onedriver
+          apt:
+            name: onedriver
+            state: present
+            update_cache: yes
+    
   when: ansible_os_family == 'Debian'
 
-- name: Install lazydocker (Debian)
+- name: Install lazydocker
   shell: curl https://raw.githubusercontent.com/jesseduffield/lazydocker/master/scripts/install_update_linux.sh | bash
   args:
     creates: /usr/local/bin/lazydocker
@@ -117,3 +156,4 @@
   shell: npm install -g tldr
   args:
     executable: /bin/bash 
+    

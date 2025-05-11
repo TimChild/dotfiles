@@ -17,9 +17,9 @@ common_packages:
 
 # Development tools
 dev_tools:
-  - task
-  - lazydocker
-  - lazygit
-  - doctl
-  - onedriver
+  # - onedriver 
+  # - doctl  # Installed in dev_tools.yml
+  # - task  # Installed in dev_tools.yml
+  # - lazygit  # Installed in dev_tools.yml
+  # - lazydocker  # Installed in dev_tools.yml
 
