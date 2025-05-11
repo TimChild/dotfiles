@@ -17,7 +17,7 @@
         - name: Clone yay AUR repo
           git:
             repo: https://aur.archlinux.org/yay.git
-            dest: "{{ ansible_env.HOME }}/yay"
+            dest: "{{ ansible_user_dir }}/yay"
             clone: yes
             update: no
             force: yes
@@ -26,13 +26,13 @@
           become: false
         - name: Ensure yay directory is owned by user
           file:
-            path: "{{ ansible_env.HOME }}/yay"
+            path: "{{ ansible_user_dir }}/yay"
             owner: "{{ ansible_env.USER | default(ansible_user_id) }}"
             group: "{{ ansible_env.USER | default(ansible_user_id) }}"
             recurse: yes
           become: false
         - name: Build and install yay
-          shell: "cd {{ ansible_env.HOME }}/yay && makepkg -si --noconfirm"
+          shell: "cd {{ ansible_user_dir }}/yay && makepkg -si --noconfirm"
           args:
             creates: /usr/bin/yay
           become: false
