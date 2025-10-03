@@ -12,3 +12,5 @@ config/nvim-old
 
 # Taskfile cache
 */.task
+
+*.DS_Store
