@@ -1,0 +1,32 @@
+---
+- name: Install development tools
+  package:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - direnv
+    - nvm
+    - uv
+    - awscli
+    - gh
+    - docker
+
+# - name: Configure AWS CLI with SSH credentials
+#   shell: |
+#     aws configure set aws_access_key_id {{ aws_access_key_id }}
+#     aws configure set aws_secret_access_key {{ aws_secret_access_key }}
+#   args:
+#     executable: /bin/bash
+#   no_log: true  # Hide sensitive output
+
+# - name: Configure GitHub CLI with SSH key authentication
+#   shell: |
+#     echo "{{ github_token }}" | gh auth login --with-token
+#   args:
+#     executable: /bin/bash
+#   no_log: true  # Hide sensitive output
+
+# - name: Start Docker service
+#   homebrew:
+#     name: docker
+#     state: started 
