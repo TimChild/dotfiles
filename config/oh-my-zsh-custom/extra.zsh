@@ -27,9 +27,6 @@ done
 # Init pyenv
 eval "$(pyenv init -)"
 
-# Completions for gh copilot
-eval "$(gh copilot alias -- zsh)"
-
 # Completions for task
 eval "$(task completion --shell zsh)"
 
