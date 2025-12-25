@@ -9,6 +9,7 @@ config/nvim-old
 
 # Don't push secrets to github
 .env
+ansible/secrets.yml
 
 # Taskfile cache
 */.task
