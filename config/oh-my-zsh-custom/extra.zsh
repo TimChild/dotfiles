@@ -19,19 +19,18 @@ directories=(
 for dir in "${directories[@]}"; do
     if [ -d "$dir" ]; then
         export PATH="$dir:$PATH"
-    else
-      echo "WARNING: Did not find \"$dir\" to add to path"
     fi
 done
 
-# Init pyenv
-eval "$(pyenv init -)"
+# Init pyenv if available
+if command -v pyenv >/dev/null 2>&1; then
+    eval "$(pyenv init -)"
+fi
 
-# Completions for gh copilot
-eval "$(gh copilot alias -- zsh)"
-
-# Completions for task
-eval "$(task completion --shell zsh)"
+# Completions for task if available
+if command -v task >/dev/null 2>&1; then
+    eval "$(task --completion zsh)"
+fi
 
 # Cursor appimage
 function cursor {
