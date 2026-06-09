@@ -1,5 +1,5 @@
 # NOTE: [general] level needs to be a top (and not actually in [general] table)
-import = [
+general.import = [
 	"~/.config/alacritty/catppuccin-mocha.toml",
 ]
 
@@ -15,12 +15,32 @@ family = "JetBrainsMono Nerd Font"
 [font.bold_italic]
 family = "JetBrainsMono Nerd Font"
 
-[shell]
+[terminal.shell]
 program = "zsh"
 # -l -- login shell
 # -c -- command (execute the following command)
-# NOTE: Opening alacritty will jump straight into tmux 
+# NOTE: Opening alacritty will jump straight into tmux
 # - detaching tmux will close the terminal
 # - use <prefix>:new to create a new session
-args = ["-l", "-c", "tmux attach || tmux"]
+# - `new-session -A -s 0` is idempotent: the first window creates session "0"
+#   (a pristine 1-pane server, so tmux-resurrect auto-restore sees a clean
+#   from-scratch state and restores every pane's working dir); any concurrent
+#   windows just attach to it. The old `tmux attach || tmux` raced on multi-
+#   window login — the fallback `tmux` spawned extra panes, so the background
+#   restore adopted them at ~ instead of cd-ing them to their saved dirs.
+args = ["-l", "-c", "tmux new-session -A -s 0"]
 
+[window]
+option_as_alt = "Both"
+
+[hints]
+alphabet = "jfkdls;ahgurieowpq"
+
+[[hints.enabled]]
+command = "open"
+hyperlinks = true
+post_processing = true
+persist = false
+regex = '''(https?://|ftp://|mailto:|magnet:|git://|ssh://|file://|news:|ipfs:|ipns:|gemini://|gopher://)[^\s"'<>`\\|{}\[\]]+'''
+mouse = { enabled = true, mods = "Command" }
+binding = { key = "U", mods = "Command|Shift" }

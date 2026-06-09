@@ -4,6 +4,48 @@
     name: alacritty
     state: present
 
+- name: Ensure alacritty config directory exists
+  file:
+    path: "{{ ansible_env.HOME }}/.config/alacritty"
+    state: directory
+
+- name: Link alacritty.toml
+  file:
+    src: "{{ playbook_dir }}/../config/alacritty/alacritty.toml"
+    dest: "{{ ansible_env.HOME }}/.config/alacritty/alacritty.toml"
+    state: link
+    force: true
+
+- name: Link alacritty catppuccin-mocha.toml
+  file:
+    src: "{{ playbook_dir }}/../config/alacritty/catppuccin-mocha.toml"
+    dest: "{{ ansible_env.HOME }}/.config/alacritty/catppuccin-mocha.toml"
+    state: link
+    force: true
+
+# tmux.conf is symlinked per-file (not the whole dir) so that the machine-local
+# plugins/ directory (cloned by TPM) can live alongside it under ~/.config/tmux.
+- name: Ensure tmux config directory exists
+  file:
+    path: "{{ ansible_env.HOME }}/.config/tmux"
+    state: directory
+
+- name: Link tmux.conf
+  file:
+    src: "{{ playbook_dir }}/../config/tmux/tmux.conf"
+    dest: "{{ ansible_env.HOME }}/.config/tmux/tmux.conf"
+    state: link
+    force: true
+
+# nvim config is a whole-directory symlink (tracked as a git submodule under
+# config/nvim — ensure it's checked out: git submodule update --init).
+- name: Link nvim config
+  file:
+    src: "{{ playbook_dir }}/../config/nvim"
+    dest: "{{ ansible_env.HOME }}/.config/nvim"
+    state: link
+    force: true
+
 - name: Install ZSH and plugins
   package:
     name:
