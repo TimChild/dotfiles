@@ -1,6 +1,13 @@
 #!/bin/bash
 
 # This script is to set up the terminal with configurations etc. saved in dotfiles.
+#
+# DEPRECATED / NOT the canonical setup path. The supported entrypoint is
+# `bin/dotfiles` (runs the ansible playbook), which installs + symlinks
+# alacritty, tmux.conf and nvim via roles/terminal. This apt-based script is
+# kept only as a manual install REFERENCE for steps not yet in ansible
+# (flatpak, alacritty terminfo, tpm, pyenv, ggshield, poetry, tldr, neovim
+# appimage, ruff, lazydocker, gh copilot, gnome-tweaks, clamav, ...).
 
 
 # # Function that returns a boolean based on user input (y/n) (function should take prompt string, and default value)
@@ -33,10 +40,9 @@ ln -s ~/dotfiles/home/.zshrc ~/.zshrc
 ln -s ~/dotfiles/taskfile_global.yml ~/Taskfile.yml
 
 # Setup configs (that live in config directory)
-ln -s ~/dotfiles/config/tmux ~/.config
-ln -s ~/dotfiles/config/nvim ~/.config
-ln -s ~/dotfiles/config/oh-my-zsh ~/.config
-ln -s ~/dotfiles/config/alacritty ~/.config
+# NOTE: tmux/nvim/alacritty config symlinks are now handled by the ansible
+# terminal role (the canonical path). The old lines here were stale/broken
+# (e.g. config/oh-my-zsh never existed) and were removed to avoid drift.
 # Setup clamav
 sudo ln -s ~/dotfiles/config/clamav/freshclam.conf /usr/local/etc/freshclam.conf
 sudo ln -s ~/dotfiles/config/clamav/clamd.conf /usr/local/etc/clamd.conf
