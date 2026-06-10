@@ -36,3 +36,12 @@ fi
 function cursor {
         ~/appimages/Cursor-0.49.6-x86_64.AppImage --no-sandbox $@
 }
+
+# ssh: force a universally-available TERM for outbound connections.
+# tmux sets TERM=tmux-256color (good local rendering), but ssh forwards $TERM
+# to the remote, and many minimal/older hosts (Debian/Proxmox without
+# ncurses-term) lack that terminfo entry -- which breaks readline line editing
+# (backspace moves the cursor the wrong way, no visual delete). xterm-256color
+# is present on essentially every host, so downgrade just for ssh. `command`
+# avoids recursing into this function. Local panes keep tmux-256color.
+ssh() { TERM=xterm-256color command ssh "$@"; }
