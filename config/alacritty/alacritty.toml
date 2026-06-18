@@ -36,11 +36,52 @@ option_as_alt = "Both"
 [hints]
 alphabet = "jfkdls;ahgurieowpq"
 
+# Rule 1 — WEB / non-file URI schemes -> macOS `open` (default browser, etc.).
+# Deliberately NO file:// / vscode:// here — file links go to nvim/Obsidian
+# below, not to whatever app macOS has registered. hyperlinks=true also
+# captures OSC-8 hyperlinks. Hold Command to underline-on-hover + click;
+# Command+Shift+U launches keyboard hint mode.
 [[hints.enabled]]
 command = "open"
 hyperlinks = true
 post_processing = true
 persist = false
-regex = '''(https?://|ftp://|mailto:|magnet:|git://|ssh://|file://|news:|ipfs:|ipns:|gemini://|gopher://)[^\s"'<>`\\|{}\[\]]+'''
+regex = '''(https?://|ftp://|mailto:|magnet:|git://|ssh://|news:|ipfs:|ipns:|gemini://|gopher://)[^\s"'<>`\\|{}\[\]]+'''
 mouse = { enabled = true, mods = "Command" }
 binding = { key = "U", mods = "Command|Shift" }
+
+# NOTE on modifiers: on this machine the hint activation modifier is what the
+# config calls "Command" but is physically triggered by **Ctrl+Shift+click**
+# (verified empirically across sessions; no OS-level remap is detectable —
+# hidutil/Karabiner/defaults all clean — so the reason is unknown, but the
+# behavior is consistent). "Command" alone and the Command key do nothing.
+# Don't "fix" mods="Command" below to match intuition — it works as-is.
+
+# Rule 2 — FILE paths (bare absolute / ~ / file:// URL), optional :line:col.
+# Ctrl+Shift+click opens the file in a new nvim pane in the running tmux
+# session and jumps to the line. Matches ALL files (incl. .md) — nvim is the
+# default. Carries no http(s) scheme so Rule 1 ignores it; this is what makes
+# /Users/.../foo.py:42 clickable. The wrapper handles the "no $TMUX / no PATH
+# when spawned by a GUI app" gotchas (see ~/dotfiles/bin/open-in-nvim).
+[[hints.enabled]]
+command = "/Users/timchild/dotfiles/bin/open-in-nvim"
+post_processing = true
+persist = false
+regex = '''(?:file://)?(?:~|/(?:Users|home|opt|etc|var|tmp|private|usr|Applications|Volumes))/[\w.@%+~/-]+(?::[0-9]+){0,2}'''
+mouse = { enabled = true, mods = "Command" }
+
+# Rule 3 — MARKDOWN files -> Obsidian (rich, mermaid-rendered view).
+# Same .md/.markdown paths as Rule 2, but on a DIFFERENT physical modifier:
+# Option+Shift+click (mods="Alt|Shift"). Ctrl+Shift's rule above and this one
+# require disjoint modifier sets, so they never collide (the earlier
+# Command|Shift attempt was unreachable — it overlapped Rule 2's Command).
+# So: Ctrl+Shift+click a .md = edit in nvim; Option+Shift+click = view in
+# Obsidian. If Option+Shift turns out to do nothing here too, use the `obs`
+# shell command instead (in ~/dotfiles/config/oh-my-zsh-custom/extra.zsh).
+# Out-of-vault files make Obsidian show a "not found" notice.
+[[hints.enabled]]
+command = "/Users/timchild/dotfiles/bin/open-in-obsidian"
+post_processing = true
+persist = false
+regex = '''(?:file://)?(?:~|/(?:Users|home|opt|etc|var|tmp|private|usr|Applications|Volumes))/[\w.@%+~/-]+\.(?:md|markdown)(?::[0-9]+){0,2}'''
+mouse = { enabled = true, mods = "Alt|Shift" }

@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+# open-in-nvim — open a file clicked from an Alacritty URL hint in a new nvim
+# pane in the running tmux session.
+#
+# Accepts: a bare path, a path:line, a path:line:col, or a file:// URL.
+#
+# Two gotchas this script exists to handle, both because Alacritty spawns the
+# hint command itself (not via your shell, not inside tmux):
+#   1. No $TMUX — so we find the attached session explicitly via list-clients.
+#   2. No shell PATH — a GUI app inherits a minimal PATH, so tmux/nvim may not
+#      be found. We prepend the usual Homebrew/system bin dirs.
+#
+# Set DRY=1 to print the tmux command instead of running it (used for testing).
+set -uo pipefail
+
+export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:$PATH"
+
+raw="${1:-}"
+[ -n "$raw" ] || exit 0
+
+# Strip a file:// scheme if present, then percent-decode (handles %20 etc.).
+case "$raw" in file://*) raw="${raw#file://}";; esac
+case "$raw" in *%*) raw="$(printf '%b' "${raw//%/\\x}")";; esac
+
+# Expand a leading ~.
+case "$raw" in
+  "~")   raw="$HOME";;
+  "~/"*) raw="$HOME/${raw#\~/}";;
+esac
+
+# Peel a trailing :line:col or :line, but ONLY if the resulting base path
+# exists — so a real filename that happens to contain a colon is never mangled.
+# Try the :line:col form first, then :line.
+file="$raw"; line=""
+if [[ "$raw" =~ ^(.+):([0-9]+):([0-9]+)$ ]] && [ -e "${BASH_REMATCH[1]}" ]; then
+  file="${BASH_REMATCH[1]}"; line="${BASH_REMATCH[2]}"
+elif [[ "$raw" =~ ^(.+):([0-9]+)$ ]] && [ -e "${BASH_REMATCH[1]}" ]; then
+  file="${BASH_REMATCH[1]}"; line="${BASH_REMATCH[2]}"
+fi
+
+[ -e "$file" ] || exit 0
+dir="$(cd "$(dirname "$file")" 2>/dev/null && pwd)"
+
+# Target the session of the currently-attached client (Alacritty isn't in tmux).
+sess="$(tmux list-clients -F '#{client_session}' 2>/dev/null | head -n1)"
+if [ -z "$sess" ]; then
+  # No tmux to split into — reveal in Finder rather than doing nothing.
+  open -R "$file" 2>/dev/null || true
+  exit 0
+fi
+
+# Build: tmux split-window -h -t <sess>: -c <dir> nvim [+line] <file>
+set -- split-window -h -t "${sess}:" -c "${dir:-$HOME}" nvim
+[ -n "$line" ] && set -- "$@" "+${line}"
+set -- "$@" "$file"
+
+if [ "${DRY:-0}" = "1" ]; then
+  printf 'tmux'; printf ' %q' "$@"; printf '\n'
+  exit 0
+fi
+
+exec tmux "$@"

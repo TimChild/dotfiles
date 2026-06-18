@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+# open-in-obsidian — open a markdown file clicked from an Alacritty URL hint in
+# Obsidian (rich, mermaid-rendering view). Obsidian can only open files that
+# live inside a registered vault; most of Tim's markdown is under vaults
+# (~/github, ~/ObsidianNotes/General, etc.), so this works for those. Files
+# outside any vault will make Obsidian show a "not found" notice.
+#
+# Accepts a bare path or a file:// URL (any :line:col suffix is ignored —
+# Obsidian's URI scheme can't jump to a line). Set DRY=1 to print the URI.
+set -uo pipefail
+export PATH="/usr/bin:/bin:$PATH"
+
+raw="${1:-}"
+[ -n "$raw" ] || exit 0
+
+case "$raw" in file://*) raw="${raw#file://}";; esac
+case "$raw" in *%*) raw="$(printf '%b' "${raw//%/\\x}")";; esac
+case "$raw" in
+  "~")   raw="$HOME";;
+  "~/"*) raw="$HOME/${raw#\~/}";;
+esac
+# Drop a trailing :line[:col] if the base file exists.
+if [[ "$raw" =~ ^(.+):([0-9]+)(:([0-9]+))?$ ]] && [ -e "${BASH_REMATCH[1]}" ]; then
+  raw="${BASH_REMATCH[1]}"
+fi
+
+# Percent-encode the absolute path for the obsidian:// URI.
+urlencode() {
+  local s="$1" out="" c i hex
+  for (( i=0; i<${#s}; i++ )); do
+    c="${s:i:1}"
+    case "$c" in
+      [a-zA-Z0-9.~_/-]) out+="$c";;
+      *) printf -v hex '%%%02X' "'$c"; out+="$hex";;
+    esac
+  done
+  printf '%s' "$out"
+}
+
+uri="obsidian://open?path=$(urlencode "$raw")"
+if [ "${DRY:-0}" = "1" ]; then printf '%s\n' "$uri"; exit 0; fi
+exec open "$uri"
