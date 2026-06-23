@@ -58,6 +58,15 @@ ssh() { TERM=xterm-256color command ssh "$@"; }
 #   - Auto-runs `aws sso login` if the SSO token has expired.
 # Verified 2026-06-16: opus-4-8 invokes end-to-end via Claude Code; a 700K-token
 # context was accepted with the context-1m beta on this account/region.
+#
+# OTLP telemetry note: the OTEL env block in ~/.claude/settings.json applies on
+# every launch (this launcher only prepends Bedrock vars), so metrics DO export.
+# But on Bedrock there's no Anthropic OAuth login, so Claude Code can't derive
+# user.email -- usage lands in the anonymous bucket on the dashboards. We set it
+# explicitly here so Bedrock sessions attribute to the same identity as
+# first-party. user.id matches the first-party telemetry hash so panels keyed on
+# either label unify. Verify after a session: query Prometheus user_email.
+_CLAUDE_BEDROCK_OTEL_ATTRS='user.email=tchild@exowatt.com,user.id=11120af17c1d64cf1b289173c92a6c3fd96620a0b1f89bcd540df96555eed4bb'
 claude-bedrock() {
   if ! aws sts get-caller-identity --profile exowatt-dev >/dev/null 2>&1; then
     echo "claude-bedrock: AWS SSO token expired -- running 'aws sso login --profile exowatt-dev'..." >&2
@@ -76,7 +85,30 @@ claude-bedrock() {
   CLAUDE_CODE_USE_BEDROCK=1 \
   AWS_REGION=us-east-1 \
   AWS_PROFILE=exowatt-dev \
+  OTEL_RESOURCE_ATTRIBUTES="$_CLAUDE_BEDROCK_OTEL_ATTRS" \
   ANTHROPIC_DEFAULT_OPUS_MODEL='global.anthropic.claude-opus-4-8[1m]' \
+  ANTHROPIC_DEFAULT_SONNET_MODEL='global.anthropic.claude-sonnet-4-6' \
+  ANTHROPIC_DEFAULT_HAIKU_MODEL='global.anthropic.claude-haiku-4-5-20251001-v1:0' \
+    command claude "${model_args[@]}" "$@"
+}
+
+# Same as claude-bedrock but without the 1M context window (standard 200K).
+# Use this when you're getting 503s on Opus -- the 1M tier has much lower
+# provisioned capacity on Bedrock and 503s even on the first message.
+claude-bedrock-std() {
+  if ! aws sts get-caller-identity --profile exowatt-dev >/dev/null 2>&1; then
+    echo "claude-bedrock-std: AWS SSO token expired -- running 'aws sso login --profile exowatt-dev'..." >&2
+    aws sso login --profile exowatt-dev || { echo "claude-bedrock-std: SSO login failed; aborting." >&2; return 1; }
+  fi
+  local model_args=()
+  if [[ " $* " != *" --model "* ]]; then
+    model_args=(--model opus)
+  fi
+  CLAUDE_CODE_USE_BEDROCK=1 \
+  AWS_REGION=us-east-1 \
+  AWS_PROFILE=exowatt-dev \
+  OTEL_RESOURCE_ATTRIBUTES="$_CLAUDE_BEDROCK_OTEL_ATTRS" \
+  ANTHROPIC_DEFAULT_OPUS_MODEL='global.anthropic.claude-opus-4-8' \
   ANTHROPIC_DEFAULT_SONNET_MODEL='global.anthropic.claude-sonnet-4-6' \
   ANTHROPIC_DEFAULT_HAIKU_MODEL='global.anthropic.claude-haiku-4-5-20251001-v1:0' \
     command claude "${model_args[@]}" "$@"
