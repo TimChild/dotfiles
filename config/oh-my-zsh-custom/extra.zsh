@@ -132,19 +132,47 @@ claude-bedrock-std() {
 #   claude          first-party Anthropic API (Enterprise seat)
 #   claude-bedrock  direct Bedrock (env-var path, AWS SSO, client-side creds)
 #   claude-gateway  gateway -> Bedrock (SSO identity, server-side creds, caps)
-# Isolation: CLAUDE_CONFIG_DIR keeps auth/session state in ~/.claude-gateway/
-# (its settings.json carries forceLoginMethod/forceLoginGatewayUrl), so the
-# gateway login can NEVER clobber the first-party OAuth in ~/.claude. This
-# replaces the managed-settings.json /Library path for the pilot A/B -- that
-# file is machine-wide and would force EVERY claude launch onto the gateway.
-# NOTE: separate config dir = separate skills/plugins/settings from ~/.claude;
-# expected for an A/B tester. OTEL attrs not set: the gateway stamps identity
-# server-side from the SSO login (that's the whole point).
+# Isolation: CLAUDE_CONFIG_DIR keeps auth/session state in ~/.claude-gateway/,
+# so the gateway login can NEVER clobber the first-party OAuth in ~/.claude.
+# This replaces the managed-settings.json /Library path for the pilot A/B --
+# that file is machine-wide and would force EVERY claude launch onto the
+# gateway. OTEL attrs not set: the gateway stamps identity server-side.
+#
+# Config SHARING (so the A/B compares like-for-like): the launcher symlinks the
+# shareable pieces of ~/.claude into ~/.claude-gateway (skills, plugins,
+# CLAUDE.md, projects [= auto-memory + transcripts], agent-memory, plans, .env)
+# and regenerates settings.json ON EVERY LAUNCH as (~/.claude/settings.json +
+# the two gateway login keys), so main-config changes propagate automatically.
+# Deliberately NOT shared: .claude.json (OAuth account/session state -- sharing
+# it would defeat the auth isolation) => user-scope `claude mcp add` servers
+# don't carry over; re-add them once under claude-gateway.
 # First connect prompts to trust the TLS leaf fingerprint -- verify against
 # the one published in #it-support (cert renews ~60-90d; re-verify then).
 claude-gateway() {
-  CLAUDE_CONFIG_DIR="$HOME/.claude-gateway" \
-    command claude "$@"
+  local gw="$HOME/.claude-gateway" main="$HOME/.claude"
+  mkdir -p "$gw"
+  # Shareable config: symlink (idempotent; skip anything that became a real
+  # file/dir locally so we never clobber gateway-local state).
+  local item
+  for item in CLAUDE.md skills plugins projects agent-memory plans .env; do
+    if [[ -e "$main/$item" && ! -e "$gw/$item" ]]; then
+      ln -s "$main/$item" "$gw/$item"
+    fi
+  done
+  # settings.json = main settings + gateway login overlay (regenerated every
+  # launch so it tracks ~/.claude/settings.json; never symlinked).
+  python3 - "$main/settings.json" "$gw/settings.json" <<'PYEOF'
+import json, sys
+base = {}
+try:
+    base = json.load(open(sys.argv[1]))
+except Exception:
+    pass
+base["forceLoginMethod"] = "gateway"
+base["forceLoginGatewayUrl"] = "https://claude-gateway.dev.exowatt.com"
+json.dump(base, open(sys.argv[2], "w"), indent=2)
+PYEOF
+  CLAUDE_CONFIG_DIR="$gw" command claude "$@"
 }
 
 # obs — open a file in Obsidian (rich, mermaid-rendering view). The reliable
