@@ -48,13 +48,20 @@ ssh() { TERM=xterm-256color command ssh "$@"; }
 
 # --- Claude Code via AWS Bedrock (opt-in launcher) -------------------------
 # Run `claude-bedrock` to drive Claude Code against AWS Bedrock (Exowatt-Dev
-# account 340752802981) on Opus 4.8, instead of the first-party Anthropic API.
+# account 340752802981) on Opus 4.8 by default (or Fable 5 via `--model fable`),
+# instead of the first-party Anthropic API.
 # Plain `claude` is UNCHANGED -- it still uses ~/.claude/settings.json
 # ("model": "opus[1m]") on the first-party API. So this is a no-risk A/B: type
 # `claude-bedrock` for Bedrock, `claude` for first-party. Nothing global is
 # mutated; revert = stop using the function.
 #   - Profile exowatt-dev (NOT enterprise-dev, which lacks Opus 4.7/4.8 access).
-#   - global.* inference profiles: higher pooled TPM; Fable 5 is global-only.
+#   - global.* inference profiles: higher pooled TPM (Opus/Sonnet/Haiku).
+#   - `--model fable` selects Fable 5 via the us.* profile, NOT global.*: as of
+#     2026-07-01 global.anthropic.claude-fable-5 throws InternalServerException
+#     (500) on this account -- Bedrock hasn't provisioned Fable across every
+#     region the global profile routes to yet. us.anthropic.claude-fable-5
+#     works. Revisit global.* once AWS finishes the Fable rollout. Fable is
+#     1M-context by default, so -std does NOT shrink it (the 200K cap = Opus).
 #   - Auto-runs `aws sso login` if the SSO token has expired.
 # Verified 2026-06-16: opus-4-8 invokes end-to-end via Claude Code; a 700K-token
 # context was accepted with the context-1m beta on this account/region.
@@ -86,6 +93,7 @@ claude-bedrock() {
   AWS_REGION=us-east-1 \
   AWS_PROFILE=exowatt-dev \
   OTEL_RESOURCE_ATTRIBUTES="$_CLAUDE_BEDROCK_OTEL_ATTRS" \
+  ANTHROPIC_DEFAULT_FABLE_MODEL='us.anthropic.claude-fable-5' \
   ANTHROPIC_DEFAULT_OPUS_MODEL='global.anthropic.claude-opus-4-8[1m]' \
   ANTHROPIC_DEFAULT_SONNET_MODEL='global.anthropic.claude-sonnet-4-6' \
   ANTHROPIC_DEFAULT_HAIKU_MODEL='global.anthropic.claude-haiku-4-5-20251001-v1:0' \
@@ -108,6 +116,7 @@ claude-bedrock-std() {
   AWS_REGION=us-east-1 \
   AWS_PROFILE=exowatt-dev \
   OTEL_RESOURCE_ATTRIBUTES="$_CLAUDE_BEDROCK_OTEL_ATTRS" \
+  ANTHROPIC_DEFAULT_FABLE_MODEL='us.anthropic.claude-fable-5' \
   ANTHROPIC_DEFAULT_OPUS_MODEL='global.anthropic.claude-opus-4-8' \
   ANTHROPIC_DEFAULT_SONNET_MODEL='global.anthropic.claude-sonnet-4-6' \
   ANTHROPIC_DEFAULT_HAIKU_MODEL='global.anthropic.claude-haiku-4-5-20251001-v1:0' \
