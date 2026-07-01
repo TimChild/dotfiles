@@ -123,6 +123,30 @@ claude-bedrock-std() {
     command claude "${model_args[@]}" "$@"
 }
 
+# --- Claude Code via the Claude apps gateway (opt-in launcher) --------------
+# Run `claude-gateway` to drive Claude Code through the self-hosted Claude apps
+# gateway (https://claude-gateway.dev.exowatt.com on VM 108 -> Bedrock).
+# Sign-in is Google Workspace SSO (device flow), NOT AWS SSO -- no aws profile
+# needed; per-user attribution + spend caps happen server-side at the gateway.
+# Plain `claude` and `claude-bedrock` are UNCHANGED -- three-way A/B:
+#   claude          first-party Anthropic API (Enterprise seat)
+#   claude-bedrock  direct Bedrock (env-var path, AWS SSO, client-side creds)
+#   claude-gateway  gateway -> Bedrock (SSO identity, server-side creds, caps)
+# Isolation: CLAUDE_CONFIG_DIR keeps auth/session state in ~/.claude-gateway/
+# (its settings.json carries forceLoginMethod/forceLoginGatewayUrl), so the
+# gateway login can NEVER clobber the first-party OAuth in ~/.claude. This
+# replaces the managed-settings.json /Library path for the pilot A/B -- that
+# file is machine-wide and would force EVERY claude launch onto the gateway.
+# NOTE: separate config dir = separate skills/plugins/settings from ~/.claude;
+# expected for an A/B tester. OTEL attrs not set: the gateway stamps identity
+# server-side from the SSO login (that's the whole point).
+# First connect prompts to trust the TLS leaf fingerprint -- verify against
+# the one published in #it-support (cert renews ~60-90d; re-verify then).
+claude-gateway() {
+  CLAUDE_CONFIG_DIR="$HOME/.claude-gateway" \
+    command claude "$@"
+}
+
 # obs — open a file in Obsidian (rich, mermaid-rendering view). The reliable
 # way to reach Obsidian regardless of terminal click-modifier quirks; the
 # Alacritty Option+Shift+click hint is the convenience path, this is the
