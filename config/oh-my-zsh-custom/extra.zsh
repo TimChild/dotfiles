@@ -190,7 +190,18 @@ base["forceLoginMethod"] = "gateway"
 base["forceLoginGatewayUrl"] = "https://claude-gateway.dev.exowatt.com"
 json.dump(base, open(sys.argv[2], "w"), indent=2)
 PYEOF
-  CLAUDE_CONFIG_DIR="$gw" command claude "$@"
+  # Scrub direct-provider env vars from the LAUNCH environment too (not just
+  # the profile settings): CLAUDE_CODE_USE_BEDROCK=1 in the inherited shell
+  # env (e.g. a tmux pane whose server inherited it, or a shell inside a
+  # claude-bedrock session) silently bypasses gateway login — the env var IS
+  # the auth, so no Google prompt ever appears. env -u guarantees a clean
+  # start regardless of shell contamination.
+  env -u CLAUDE_CODE_USE_BEDROCK -u CLAUDE_CODE_USE_VERTEX \
+      -u AWS_PROFILE -u AWS_REGION -u AWS_ACCESS_KEY_ID -u AWS_SECRET_ACCESS_KEY \
+      -u ANTHROPIC_MODEL -u ANTHROPIC_DEFAULT_FABLE_MODEL \
+      -u ANTHROPIC_DEFAULT_OPUS_MODEL -u ANTHROPIC_DEFAULT_SONNET_MODEL \
+      -u ANTHROPIC_DEFAULT_HAIKU_MODEL -u OTEL_RESOURCE_ATTRIBUTES \
+      CLAUDE_CONFIG_DIR="$gw" claude "$@"
 }
 
 # obs — open a file in Obsidian (rich, mermaid-rendering view). The reliable
