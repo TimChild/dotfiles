@@ -161,6 +161,11 @@ claude-gateway() {
   done
   # settings.json = main settings + gateway login overlay (regenerated every
   # launch so it tracks ~/.claude/settings.json; never symlinked).
+  # Hardening (2026-07-01 incident): a session "on the gateway" was silently
+  # running DIRECT Bedrock — CLAUDE_CODE_USE_BEDROCK=1 + AWS_*/ANTHROPIC_*
+  # model overrides landed in the profile's settings.json env, which bypasses
+  # gateway login entirely (no allowlist, no caps, no attribution). Strip
+  # those keys on every launch; preserve in-session prefs (theme/model).
   python3 - "$main/settings.json" "$gw/settings.json" <<'PYEOF'
 import json, sys
 base = {}
@@ -168,6 +173,19 @@ try:
     base = json.load(open(sys.argv[1]))
 except Exception:
     pass
+prev = {}
+try:
+    prev = json.load(open(sys.argv[2]))
+except Exception:
+    pass
+for k in ("theme", "model"):
+    if k in prev:
+        base[k] = prev[k]
+env = dict(base.get("env", {}))
+for k in list(env):
+    if k == "CLAUDE_CODE_USE_BEDROCK" or k.startswith(("AWS_", "ANTHROPIC_DEFAULT_", "ANTHROPIC_MODEL", "ANTHROPIC_BEDROCK")):
+        env.pop(k)
+base["env"] = env
 base["forceLoginMethod"] = "gateway"
 base["forceLoginGatewayUrl"] = "https://claude-gateway.dev.exowatt.com"
 json.dump(base, open(sys.argv[2], "w"), indent=2)
