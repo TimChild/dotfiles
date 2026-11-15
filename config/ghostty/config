@@ -1,0 +1,6 @@
+# Ghostty — replaces Alacritty on Macs where the Alacritty cask is unavailable (disabled by Homebrew 2026-09-01).
+# Mirrors config/alacritty/alacritty.toml: JetBrainsMono Nerd Font, Catppuccin Mocha, straight into tmux session 0.
+font-family = JetBrainsMono Nerd Font
+theme = Catppuccin Mocha
+macos-option-as-alt = true
+command = /bin/zsh -l -c "tmux new-session -A -s 0"

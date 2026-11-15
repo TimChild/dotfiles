@@ -1,0 +1,37 @@
+#!/bin/zsh
+# Clone the repos Tim works in onto a new Mac, using the same layout as the work Mac
+# (so per-project Claude memory keyed by path lines up). Idempotent: existing clones are skipped.
+# Needs: gh signed in (gh auth login) and `gh auth setup-git`. See docs/macos-setup.md.
+export PATH=/opt/homebrew/bin:$PATH
+G=~/github
+
+clone() { # <owner/repo> <dest>
+  if [ -d "$2/.git" ]; then echo "SKIP $1"; return; fi
+  mkdir -p "$(dirname "$2")"
+  # blob:none partial clones keep big repos (e.g. the PhiCad KiCad fork) fast
+  if git clone --quiet --filter=blob:none "https://github.com/$1.git" "$2"; then echo "OK   $1 -> $2"; else echo "FAIL $1"; fi
+}
+
+# dotfiles themselves (with the nvim submodule)
+clone TimChild/dotfiles ~/dotfiles && git -C ~/dotfiles submodule update --init --quiet
+
+# wizard stack — same paths as work
+for r in phi p3code feads phi-remote; do clone exowatt-oss/$r $G/$r; done
+
+# Copper source (its skill/copper-cli is symlinked into ~/.claude/skills and ~/.pi/agent/skills)
+clone copper-browser/Copper $G/copper-browser/Copper
+
+# the rest of the two OSS orgs
+for r in $(gh repo list exowatt-oss --limit 200 --json name --jq '.[].name'); do
+  case $r in phi|p3code|feads|phi-remote|.github) continue;; esac
+  clone exowatt-oss/$r $G/exowatt-oss/$r
+done
+for r in $(gh repo list couplet-physical-ai --limit 200 --json name --jq '.[].name'); do
+  case $r in .github) continue;; esac
+  clone couplet-physical-ai/$r $G/couplet-physical-ai/$r
+done
+
+# personal (private) repos
+for r in PaperTrade adventuresoftim homelab claude-config phi-personal tim-claude-marketplace; do
+  clone TimChild/$r $G/personal/$r
+done
