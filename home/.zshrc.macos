@@ -1,0 +1,17 @@
+# ~/.zshrc for macOS (symlinked from ~/dotfiles/home/.zshrc.macos — see docs/macos-setup.md).
+# Mirrors what the ansible terminal role (gantsign.oh-my-zsh) generates on Linux;
+# personal aliases/functions live in config/oh-my-zsh-custom/{extra,plugins}.zsh.
+export ZSH="$HOME/.oh-my-zsh"
+ZSH_THEME="robbyrussell"
+zstyle ':omz:update' mode reminder
+zstyle ':omz:update' frequency 14
+plugins=(aws dotenv fzf gh git golang npm vi-mode)
+source $ZSH/oh-my-zsh.sh
+
+export EDITOR=nvim
+export PATH="/opt/homebrew/opt/rustup/bin:$HOME/.cargo/bin:$HOME/.local/bin:$HOME/go/bin:$PATH"
+
+# Vite+ (p3code toolchain)
+[ -f "$HOME/.config/vite-plus/env" ] && . "$HOME/.config/vite-plus/env"
+# direnv
+command -v direnv >/dev/null && eval "$(direnv hook zsh)"
